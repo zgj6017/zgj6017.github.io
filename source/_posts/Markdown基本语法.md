@@ -10,6 +10,8 @@ categories:
 
 最后有彩蛋！！！
 
+<!-- more -->
+
 Markdown 是一种轻量级标记语言，用于格式化纯文本，使其易于转换为HTML。以下是常用语法及编辑器操作提示（以 [Typora](https://typora.io/#feature) 等常见编辑器为例）：
 
 ## 标题
