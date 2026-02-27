@@ -31,8 +31,6 @@ data: 2026-02-25 18:30:00
 
 Git是版本控制工具，用来把博客文件推送到GitHub。
 
-bash
-
 ```
 # 下载地址：https://git-scm.com/
 # 安装后验证版本
@@ -45,8 +43,6 @@ git --version
 ### 2. 安装 Node.js
 
 Hexo是基于Node.js的博客框架，需要Node.js环境来运行。
-
-bash
 
 ```
 # 下载地址：https://nodejs.org/
@@ -65,8 +61,6 @@ npm -v
 
 ### 第一步：安装 Hexo
 
-bash
-
 ```
 # -g 表示全局安装，这样在任意目录都可以使用 hexo 命令
 npm install -g hexo-cli
@@ -79,8 +73,6 @@ hexo -v
 
 
 ### 第二步：初始化博客
-
-bash
 
 ```
 # 在你想存放博客的目录下执行
@@ -111,8 +103,6 @@ npm install
 
 ### 第三步：了解博客目录结构
 
-text
-
 ```
 MyBlog/
 ├── node_modules/      # 存放所有依赖包（自动生成，不用管）
@@ -127,8 +117,6 @@ MyBlog/
 
 
 ### 第四步：本地预览
-
-bash
 
 ```
 # server 命令会启动一个本地服务器
@@ -156,8 +144,6 @@ hexo server
 
 ### 2. 安装部署插件
 
-bash
-
 ```
 # --save 参数会将插件添加到 package.json 的依赖列表中
 # hexo-deployer-git 是专门用于部署到 Git 仓库的插件
@@ -169,8 +155,6 @@ npm install hexo-deployer-git --save
 ### 3. 修改配置文件
 
 打开根目录的 `_config.yml`（这是博客的主配置文件），找到 `deploy` 部分：
-
-yaml
 
 ```
 # Site 站点信息（根据自己的情况修改）
@@ -194,8 +178,6 @@ deploy:
 
 
 ### 4. 部署上线
-
-bash
 
 ```
 # hexo clean：清除之前生成的静态文件（public 文件夹）
@@ -230,8 +212,6 @@ hexo deploy
 
 以最流行的 Next 主题为例：
 
-bash
-
 ```
 # git clone 命令会将整个主题仓库下载到本地
 # 格式：git clone 仓库地址 themes/主题文件夹名
@@ -247,8 +227,6 @@ git clone https://github.com/theme-next/hexo-theme-next themes/next
 
 修改根目录的 `_config.yml`：
 
-yaml
-
 ```
 # 找到 theme 字段，将默认的 landscape 改为你下载的主题名
 theme: next  # 必须和 themes 文件夹下的名称完全一致（大小写敏感）
@@ -260,8 +238,6 @@ theme: next  # 必须和 themes 文件夹下的名称完全一致（大小写敏
 
 大多数主题都有自己的配置文件。对于 Next 主题：
 
-bash
-
 ```
 # 复制主题的示例配置文件到根目录
 # 这样可以方便地修改主题配置，同时不会影响主题源文件
@@ -271,8 +247,6 @@ cp themes/next/_config.yml _config.next.yml
 
 
 ### 5. 重新部署
-
-bash
 
 ```
 # 一条命令完成清理、生成、部署
@@ -289,8 +263,6 @@ hexo clean && hexo generate && hexo deploy
 
 **错误信息：**
 
-text
-
 ```
 error hexo@8.1.1: The engine "node" is incompatible with this module. Expected version ">=20.19.0". Got "12.14.0"
 ```
@@ -304,8 +276,6 @@ error hexo@8.1.1: The engine "node" is incompatible with this module. Expected v
 - 版本相差太大，无法兼容
 
 **解决方法：**
-
-bash
 
 ```
 # 方案一：直接升级 Node.js
@@ -334,8 +304,6 @@ node -v  # 应该显示 v20.18.0 或更高
 
 **错误信息：**
 
-text
-
 ```
 fatal: unable to access '...': Recv failure: Connection was reset
 ```
@@ -347,8 +315,6 @@ fatal: unable to access '...': Recv failure: Connection was reset
 - 网络连接问题，可能是 GitHub 被墙或网络不稳定
 
 **解决方法：**
-
-bash
 
 ```
 # 方案一：多试几次，网络有时候会波动
@@ -368,8 +334,6 @@ git config --global https.proxy http://127.0.0.1:7890
 
 **错误信息：**
 
-text
-
 ```
 WARN No layout: index.html
 ```
@@ -382,8 +346,6 @@ WARN No layout: index.html
 - 通常是因为主题名称配置错误或主题文件不完整
 
 **解决方法：**
-
-bash
 
 ```
 # 1. 检查主题文件夹名称
@@ -406,8 +368,6 @@ ls themes/next/layout/
 
 **错误信息：**
 
-text
-
 ```
 ERROR: Cannot find module '@cosy/ui'
 ```
@@ -420,8 +380,6 @@ ERROR: Cannot find module '@cosy/ui'
 - `@cosy/ui` 是内部模块，不是 npm 公共包
 
 **解决方法（如果坚持用 Cosy 主题）：**
-
-bash
 
 ```
 # 1. 进入主题目录
@@ -453,8 +411,6 @@ pnpm dev:hexo      # 启动热更新的 Hexo
 
 编辑 `_config.yml`：
 
-yaml
-
 ```
 # Site 站点信息
 title: 6017的博客        # 浏览器标签页显示的标题
@@ -469,8 +425,6 @@ timezone: Asia/Shanghai # 时区设置
 
 ### 写第一篇文章
 
-bash
-
 ```
 # new 命令会创建一个新的 Markdown 文件
 # 文件会保存在 source/_posts/ 目录下
@@ -480,8 +434,6 @@ hexo new "我的第一篇博客"
 
 
 生成的 Markdown 文件内容：
-
-markdown
 
 ```
 ---
@@ -519,8 +471,6 @@ categories: 随笔        # 分类
 
 [详细Markdown语法](https://zgj6017.github.io/2025/12/18/Markdown%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/)
 
-markdown
-
 ```
 # 一级标题
 ## 二级标题
@@ -549,8 +499,6 @@ markdown
 
 ### 写新文章
 
-bash
-
 ```
 # 创建新文章
 hexo new "文章标题"
@@ -563,8 +511,6 @@ hexo new "文章标题"
 
 ### 本地预览
 
-bash
-
 ```
 # 启动本地服务器
 hexo server
@@ -575,8 +521,6 @@ hexo server
 
 
 ### 部署更新
-
-bash
 
 ```
 # 完整部署命令
