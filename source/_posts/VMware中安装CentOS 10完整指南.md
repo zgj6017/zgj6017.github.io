@@ -62,7 +62,7 @@ date: 2026-02-28 11:30:00
 - 访问[CentOS](https://www.centos.org/download/)官网下载
 - 选择DVD ISO（约8-10GB）或Minimal ISO（约2GB）
 - 建议下载DVD ISO，包含常用软件包
-- ![image-20260228120051316](assets/image-20260228120051316.png)
+- {% asset_img image-20260228120051316.png 这是一个图片说明%}
 
 ### 检查宿主机环境
 
