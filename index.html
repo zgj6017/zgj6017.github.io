@@ -144,16 +144,16 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">分类</span>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-count">26</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -188,7 +188,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://zgj6017.github.io/2026/02/28/VMware%E4%B8%AD%E5%AE%89%E8%A3%85CentOS%2010%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97/">
+    <link itemprop="mainEntityOfPage" href="https://zgj6017.github.io/2026/02/28/Linux%E5%91%BD%E4%BB%A4%E5%85%A5%E9%97%A8%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97%E2%80%94%E2%80%94%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%8E%8C%E6%8F%A1%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://github.com/zgj6017.png">
@@ -206,7 +206,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/02/28/VMware%E4%B8%AD%E5%AE%89%E8%A3%85CentOS%2010%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97/" class="post-title-link" itemprop="url">VMware中安装CentOS 10完整指南</a>
+          <a href="/2026/02/28/Linux%E5%91%BD%E4%BB%A4%E5%85%A5%E9%97%A8%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97%E2%80%94%E2%80%94%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%8E%8C%E6%8F%A1%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C/" class="post-title-link" itemprop="url">Linux命令入门完全指南——从零开始掌握基础操作</a>
         </h2>
 
         <div class="post-meta-container">
@@ -218,7 +218,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2026-02-28 11:30:00 / 修改时间：12:42:04" itemprop="dateCreated datePublished" datetime="2026-02-28T11:30:00+08:00">2026-02-28</time>
+      <time title="创建时间：2026-02-28 16:44:00 / 修改时间：16:44:48" itemprop="dateCreated datePublished" datetime="2026-02-28T16:44:00+08:00">2026-02-28</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -240,10 +240,97 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>你是否在VMware中安装CentOS 10后，发现无法上网？是否还在按照老方法修改<code>ifcfg-ens33</code>却发现根本没有这个文件？今天，我就带你一步步完成CentOS 10的完整安装，并重点解决这个典型的网络问题。</p>
+          <p>Linux系统之所以强大，很大程度上归功于其丰富的命令行工具。对于初学者来说，面对黑底白字的终端可能会感到有些畏惧，但请放心，只要掌握了最基础的几十个命令，你就能轻松驾驭Linux系统。本文将带你从零开始，系统学习Linux命令的入门知识，所有命令均在CentOS环境下验证通过。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2026/02/28/VMware%E4%B8%AD%E5%AE%89%E8%A3%85CentOS%2010%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97/#more" rel="contents">
+              <a class="btn" href="/2026/02/28/Linux%E5%91%BD%E4%BB%A4%E5%85%A5%E9%97%A8%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97%E2%80%94%E2%80%94%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%8E%8C%E6%8F%A1%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://zgj6017.github.io/2026/02/28/%E4%B8%8D%E8%A6%81%E7%94%A8%E7%8E%B0%E5%9C%A8%E7%9A%84%E4%BD%A0%EF%BC%8C%E5%AE%A1%E5%88%A4%E5%BD%93%E5%88%9D%E7%9A%84%E8%87%AA%E5%B7%B1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://github.com/zgj6017.png">
+      <meta itemprop="name" content="6017">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="6017">
+      <meta itemprop="description" content="在白云看了《硅谷之火》这本书后，想成为雷布斯的小佬">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 6017">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/02/28/%E4%B8%8D%E8%A6%81%E7%94%A8%E7%8E%B0%E5%9C%A8%E7%9A%84%E4%BD%A0%EF%BC%8C%E5%AE%A1%E5%88%A4%E5%BD%93%E5%88%9D%E7%9A%84%E8%87%AA%E5%B7%B1/" class="post-title-link" itemprop="url">不要用现在的你，审判当初的自己</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-02-28 15:30:00 / 修改时间：15:24:06" itemprop="dateCreated datePublished" datetime="2026-02-28T15:30:00+08:00">2026-02-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BF%83%E7%81%B5%E9%9A%8F%E7%AC%94/" itemprop="url" rel="index"><span itemprop="name">心灵随笔</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>你有没有问过自己：如果回到十年前，我会不会做出不一样的选择？</p>
+<p>这个问题，我常常想。想得多了，便慢慢明白一件事——我们永远无法用今天的眼睛，去评判昨天的自己。因为你今天能看清的每一座山，都是因为你已经站在了山之外。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/02/28/%E4%B8%8D%E8%A6%81%E7%94%A8%E7%8E%B0%E5%9C%A8%E7%9A%84%E4%BD%A0%EF%BC%8C%E5%AE%A1%E5%88%A4%E5%BD%93%E5%88%9D%E7%9A%84%E8%87%AA%E5%B7%B1/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -330,6 +417,92 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2026/02/28/SSH%E8%BF%9C%E7%A8%8B%E7%AE%A1%E7%90%86%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E2%80%94%E2%80%94%20%E4%B8%80%E7%AF%87%E8%AE%B2%E9%80%8FSSH%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E4%B8%8E%E5%BA%94%E7%94%A8/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://zgj6017.github.io/2026/02/28/VMware%E4%B8%AD%E5%AE%89%E8%A3%85CentOS%2010%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://github.com/zgj6017.png">
+      <meta itemprop="name" content="6017">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="6017">
+      <meta itemprop="description" content="在白云看了《硅谷之火》这本书后，想成为雷布斯的小佬">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 6017">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/02/28/VMware%E4%B8%AD%E5%AE%89%E8%A3%85CentOS%2010%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97/" class="post-title-link" itemprop="url">VMware中安装CentOS 10完整指南</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-02-28 11:30:00 / 修改时间：12:42:04" itemprop="dateCreated datePublished" datetime="2026-02-28T11:30:00+08:00">2026-02-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E6%95%99%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">技术教程</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>你是否在VMware中安装CentOS 10后，发现无法上网？是否还在按照老方法修改<code>ifcfg-ens33</code>却发现根本没有这个文件？今天，我就带你一步步完成CentOS 10的完整安装，并重点解决这个典型的网络问题。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/02/28/VMware%E4%B8%AD%E5%AE%89%E8%A3%85CentOS%2010%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -888,190 +1061,9 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://zgj6017.github.io/2026/02/25/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%EF%BC%9AHexo%20+%20GitHub%20Pages%20%E5%AE%8C%E6%95%B4%E6%95%99%E7%A8%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://github.com/zgj6017.png">
-      <meta itemprop="name" content="6017">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="6017">
-      <meta itemprop="description" content="在白云看了《硅谷之火》这本书后，想成为雷布斯的小佬">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 6017">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/02/25/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%EF%BC%9AHexo%20+%20GitHub%20Pages%20%E5%AE%8C%E6%95%B4%E6%95%99%E7%A8%8B/" class="post-title-link" itemprop="url">🚀 从零开始搭建个人博客：Hexo + GitHub Pages 完整教程（含代码详解）</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-02-25 18:58:43" itemprop="dateCreated datePublished" datetime="2026-02-25T18:58:43+08:00">2026-02-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-02-27 20:41:34" itemprop="dateModified" datetime="2026-02-27T20:41:34+08:00">2026-02-27</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" itemprop="url" rel="index"><span itemprop="name">技术文档</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>今天，我亲手搭建了自己的第一个博客。整个过程虽然遇到了一些小挫折，但最终成功上线！现在把我的经验整理成这篇教程，希望能帮到也想拥有个人博客的你。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2026/02/25/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%EF%BC%9AHexo%20+%20GitHub%20Pages%20%E5%AE%8C%E6%95%B4%E6%95%99%E7%A8%8B/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://zgj6017.github.io/2025/12/18/Markdown%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://github.com/zgj6017.png">
-      <meta itemprop="name" content="6017">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="6017">
-      <meta itemprop="description" content="在白云看了《硅谷之火》这本书后，想成为雷布斯的小佬">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 6017">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/12/18/Markdown%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/" class="post-title-link" itemprop="url">Markdown 基本语法指南</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-12-18 15:16:00" itemprop="dateCreated datePublished" datetime="2025-12-18T15:16:00+08:00">2025-12-18</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-02-27 20:42:12" itemprop="dateModified" datetime="2026-02-27T20:42:12+08:00">2026-02-27</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" itemprop="url" rel="index"><span itemprop="name">技术文档</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>最后有彩蛋！！！</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2025/12/18/Markdown%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
 
 </div>
   </main>
