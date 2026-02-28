@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous" defer></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zgj6017.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="你是否在VMware中安装CentOS 10后，发现无法上网？是否还在按照老方法修改ifcfg-ens33却发现根本没有这个文件？今天，我就带你一步步完成CentOS 10的完整安装，并重点解决这个典型的网络问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VMware中安装CentOS 10完整指南">
+<meta property="og:url" content="https://zgj6017.github.io/2026/02/28/VMware%E4%B8%AD%E5%AE%89%E8%A3%85CentOS%2010%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97/index.html">
+<meta property="og:site_name" content="6017">
+<meta property="og:description" content="你是否在VMware中安装CentOS 10后，发现无法上网？是否还在按照老方法修改ifcfg-ens33却发现根本没有这个文件？今天，我就带你一步步完成CentOS 10的完整安装，并重点解决这个典型的网络问题。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zgj6017.github.io/assets/image-20260228120051316.png">
+<meta property="article:published_time" content="2026-02-28T03:30:00.000Z">
+<meta property="article:modified_time" content="2026-02-28T04:08:50.421Z">
+<meta property="article:author" content="6017">
+<meta property="article:tag" content="CentOS 10">
+<meta property="article:tag" content="新手入门">
+<meta property="article:tag" content="虚拟机">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zgj6017.github.io/assets/image-20260228120051316.png">
+
+
+<link rel="canonical" href="https://zgj6017.github.io/2026/02/28/VMware%E4%B8%AD%E5%AE%89%E8%A3%85CentOS%2010%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zgj6017.github.io/2026/02/28/VMware%E4%B8%AD%E5%AE%89%E8%A3%85CentOS%2010%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97/","path":"2026/02/28/VMware中安装CentOS 10完整指南/","title":"VMware中安装CentOS 10完整指南"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>VMware中安装CentOS 10完整指南 | 6017</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+  <script src="/js/third-party/pace.js" defer></script>
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">6017</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">记录学习与生活</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFCentOS%EF%BC%9F%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AE%89%E8%A3%85%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">什么是CentOS？为什么要用虚拟机安装？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CentOS%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">1.1.</span> <span class="nav-text">CentOS是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CentOS%E7%9A%84%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">1.2.</span> <span class="nav-text">CentOS的典型应用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E7%94%A8%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AE%89%E8%A3%85%EF%BC%9F"><span class="nav-number">1.3.</span> <span class="nav-text">为什么用虚拟机安装？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="nav-number">2.</span> <span class="nav-text">准备工作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E6%89%80%E9%9C%80%E6%96%87%E4%BB%B6"><span class="nav-number">2.1.</span> <span class="nav-text">下载所需文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A3%80%E6%9F%A5%E5%AE%BF%E4%B8%BB%E6%9C%BA%E7%8E%AF%E5%A2%83"><span class="nav-number">2.2.</span> <span class="nav-text">检查宿主机环境</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VMware%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%88%9B%E5%BB%BA"><span class="nav-number">3.</span> <span class="nav-text">VMware虚拟机创建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E5%BB%BA%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="nav-number">3.1.</span> <span class="nav-text">新建虚拟机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%88%9B%E5%BB%BA%E5%90%8E%E7%9A%84%E4%BC%98%E5%8C%96%E5%BB%BA%E8%AE%AE"><span class="nav-number">3.2.</span> <span class="nav-text">虚拟机创建后的优化建议</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CentOS-10%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85"><span class="nav-number">4.</span> <span class="nav-text">CentOS 10系统安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E5%AE%89%E8%A3%85%E7%A8%8B%E5%BA%8F"><span class="nav-number">4.1.</span> <span class="nav-text">启动安装程序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E8%AF%AD%E8%A8%80%E9%80%89%E6%8B%A9"><span class="nav-number">4.2.</span> <span class="nav-text">安装语言选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE"><span class="nav-number">4.3.</span> <span class="nav-text">关键安装配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E7%9B%AE%E7%9A%84%E5%9C%B0%EF%BC%88%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%EF%BC%89"><span class="nav-number">4.3.1.</span> <span class="nav-text">安装目的地（磁盘分区）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E4%B8%8E%E4%B8%BB%E6%9C%BA%E5%90%8D%EF%BC%88%E9%9D%9E%E5%B8%B8%E9%87%8D%E8%A6%81%EF%BC%81%EF%BC%89"><span class="nav-number">4.3.2.</span> <span class="nav-text">网络与主机名（非常重要！）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B9%E5%AF%86%E7%A0%81%E4%B8%8E%E7%94%A8%E6%88%B7%E5%88%9B%E5%BB%BA"><span class="nav-number">4.3.3.</span> <span class="nav-text">根密码与用户创建</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6%E9%80%89%E6%8B%A9%EF%BC%88%E5%8F%AF%E9%80%89%E4%BD%86%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="nav-number">4.3.4.</span> <span class="nav-text">软件选择（可选但推荐）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B%E5%AE%89%E8%A3%85"><span class="nav-number">4.4.</span> <span class="nav-text">开始安装</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A6%96%E6%AC%A1%E5%90%AF%E5%8A%A8%E4%B8%8E%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98%E5%8F%91%E7%8E%B0"><span class="nav-number">5.</span> <span class="nav-text">首次启动与网络问题发现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A6%96%E6%AC%A1%E7%99%BB%E5%BD%95"><span class="nav-number">5.1.</span> <span class="nav-text">首次登录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E7%BD%91%E7%BB%9C%E7%8A%B6%E6%80%81%E2%80%94%E2%80%94%E5%8F%91%E7%8E%B0%E9%97%AE%E9%A2%98"><span class="nav-number">5.2.</span> <span class="nav-text">验证网络状态——发现问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE%E9%97%AE%E9%A2%98%E6%B7%B1%E5%BA%A6%E6%8E%92%E6%9F%A5%E4%B8%8E%E8%A7%A3%E5%86%B3"><span class="nav-number">6.</span> <span class="nav-text">网络配置问题深度排查与解决</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E5%8F%8D%E5%BA%94%EF%BC%9A%E6%A3%80%E6%9F%A5%E4%BC%A0%E7%BB%9F%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%EF%BC%88%E4%BC%9A%E8%B8%A9%E5%9D%91%EF%BC%81%EF%BC%89"><span class="nav-number">6.1.</span> <span class="nav-text">第一反应：检查传统配置文件（会踩坑！）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%A0%E7%BB%9F%E6%96%B9%E6%B3%95%E5%A4%B1%E6%95%88%E4%BA%86%EF%BC%9F"><span class="nav-number">6.2.</span> <span class="nav-text">为什么传统方法失效了？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E7%A1%AE%E6%8E%92%E6%9F%A5%E6%96%B9%E6%B3%95"><span class="nav-number">6.3.</span> <span class="nav-text">正确排查方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E4%B8%80%EF%BC%9A%E4%BD%BF%E7%94%A8nmcli%E5%91%BD%E4%BB%A4%E8%A1%8C%E9%85%8D%E7%BD%AE%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="nav-number">6.4.</span> <span class="nav-text">解决方案一：使用nmcli命令行配置（推荐）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E4%BA%8C%EF%BC%9A%E4%BD%BF%E7%94%A8nmtui%E5%9B%BE%E5%BD%A2%E5%8C%96%E7%95%8C%E9%9D%A2%EF%BC%88%E6%96%B0%E6%89%8B%E5%8F%8B%E5%A5%BD%EF%BC%89"><span class="nav-number">6.5.</span> <span class="nav-text">解决方案二：使用nmtui图形化界面（新手友好）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BF%80%E6%B4%BB%E8%BF%9E%E6%8E%A5%E6%97%B6%E5%8F%AF%E8%83%BD%E9%81%87%E5%88%B0%E7%9A%84%E9%94%99%E8%AF%AF"><span class="nav-number">6.6.</span> <span class="nav-text">激活连接时可能遇到的错误</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A3%80%E6%9F%A5%E5%AE%BF%E4%B8%BB%E6%9C%BAVMware%E6%9C%8D%E5%8A%A1"><span class="nav-number">6.6.1.</span> <span class="nav-text">检查宿主机VMware服务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A3%80%E6%9F%A5VMware%E8%99%9A%E6%8B%9F%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE"><span class="nav-number">6.6.2.</span> <span class="nav-text">检查VMware虚拟网络配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E8%A7%A6%E5%8F%91DHCP%E8%AF%B7%E6%B1%82"><span class="nav-number">6.6.3.</span> <span class="nav-text">手动触发DHCP请求</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE%E6%88%90%E5%8A%9F"><span class="nav-number">7.</span> <span class="nav-text">验证网络配置成功</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A3%80%E6%9F%A5IP%E5%9C%B0%E5%9D%80%E8%8E%B7%E5%8F%96%E6%83%85%E5%86%B5"><span class="nav-number">7.1.</span> <span class="nav-text">检查IP地址获取情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E7%BD%91%E7%BB%9C%E8%BF%9E%E9%80%9A%E6%80%A7"><span class="nav-number">7.2.</span> <span class="nav-text">测试网络连通性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81DNS%E8%A7%A3%E6%9E%90"><span class="nav-number">7.3.</span> <span class="nav-text">验证DNS解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E8%B7%AF%E7%94%B1%E4%BF%A1%E6%81%AF"><span class="nav-number">7.4.</span> <span class="nav-text">查看路由信息</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3CentOS-10%E7%BD%91%E7%BB%9C%E7%AE%A1%E7%90%86"><span class="nav-number">8.</span> <span class="nav-text">深入理解CentOS 10网络管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88CentOS%E8%A6%81%E6%94%B9%E7%94%A8NetworkManager%EF%BC%9F"><span class="nav-number">8.1.</span> <span class="nav-text">为什么CentOS要改用NetworkManager？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VMware%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%BC%8F%E8%AF%A6%E8%A7%A3"><span class="nav-number">8.2.</span> <span class="nav-text">VMware网络模式详解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DHCP%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">8.3.</span> <span class="nav-text">DHCP工作原理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E7%BD%91%E7%BB%9C%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E8%A1%A8"><span class="nav-number">9.</span> <span class="nav-text">常用网络管理命令速查表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#nmcli%E5%91%BD%E4%BB%A4%E5%A4%A7%E5%85%A8"><span class="nav-number">9.1.</span> <span class="nav-text">nmcli命令大全</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E5%A4%87%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4"><span class="nav-number">9.2.</span> <span class="nav-text">设备管理命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E6%95%85%E9%9A%9C%E6%8E%92%E6%9F%A5%E5%B7%A5%E5%85%B7"><span class="nav-number">9.3.</span> <span class="nav-text">网络故障排查工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">10.</span> <span class="nav-text">常见问题及解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE%E9%97%AE%E9%A2%98"><span class="nav-number">10.1.</span> <span class="nav-text">网络配置问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE%E9%97%AE%E9%A2%98"><span class="nav-number">10.2.</span> <span class="nav-text">系统配置问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E4%B8%8E%E4%B8%AA%E6%80%A7%E5%8C%96%E9%85%8D%E7%BD%AE"><span class="nav-number">11.</span> <span class="nav-text">优化与个性化配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E9%9D%99%E6%80%81IP%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%89"><span class="nav-number">11.1.</span> <span class="nav-text">设置静态IP（可选）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E4%B8%BB%E6%9C%BA%E5%90%8D"><span class="nav-number">11.2.</span> <span class="nav-text">配置主机名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7"><span class="nav-number">11.3.</span> <span class="nav-text">安装常用工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SSH%E6%9C%8D%E5%8A%A1%E9%85%8D%E7%BD%AE%EF%BC%88%E8%BF%9C%E7%A8%8B%E8%AE%BF%E9%97%AE%EF%BC%89"><span class="nav-number">11.4.</span> <span class="nav-text">SSH服务配置（远程访问）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%87%E4%BB%BD%E4%B8%8E%E6%81%A2%E5%A4%8D%E6%8A%80%E5%B7%A7"><span class="nav-number">12.</span> <span class="nav-text">备份与恢复技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%BF%AB%E7%85%A7%EF%BC%88%E5%BC%BA%E7%83%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="nav-number">12.1.</span> <span class="nav-text">虚拟机快照（强烈推荐）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE%E5%A4%87%E4%BB%BD"><span class="nav-number">12.2.</span> <span class="nav-text">网络配置备份</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="6017"
+      src="https://github.com/zgj6017.png">
+  <p class="site-author-name" itemprop="name">6017</p>
+  <div class="site-description" itemprop="description">在白云看了《硅谷之火》这本书后，想成为雷布斯的小佬</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">21</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zgj6017" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zgj6017" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zgj6017.github.io/2026/02/28/VMware%E4%B8%AD%E5%AE%89%E8%A3%85CentOS%2010%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://github.com/zgj6017.png">
+      <meta itemprop="name" content="6017">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="6017">
+      <meta itemprop="description" content="在白云看了《硅谷之火》这本书后，想成为雷布斯的小佬">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="VMware中安装CentOS 10完整指南 | 6017">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          VMware中安装CentOS 10完整指南
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-02-28 11:30:00 / 修改时间：12:08:50" itemprop="dateCreated datePublished" datetime="2026-02-28T11:30:00+08:00">2026-02-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E6%95%99%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">技术教程</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>你是否在VMware中安装CentOS 10后，发现无法上网？是否还在按照老方法修改<code>ifcfg-ens33</code>却发现根本没有这个文件？今天，我就带你一步步完成CentOS 10的完整安装，并重点解决这个典型的网络问题。</p>
+<span id="more"></span>
+
+<p>最近在VMware中安装CentOS 10时遇到了典型的网络问题：系统安装完成后无法上网。通过一步步排查最终解决，现将完整的安装和配置过程记录下来，希望能帮助遇到同样困扰的朋友。CentOS 10的网络管理方式相比老版本有了较大变化，如果你还在用传统方法配置网络，一定会踩坑！</p>
+<hr>
+<h2 id="什么是CentOS？为什么要用虚拟机安装？"><a href="#什么是CentOS？为什么要用虚拟机安装？" class="headerlink" title="什么是CentOS？为什么要用虚拟机安装？"></a>什么是CentOS？为什么要用虚拟机安装？</h2><h3 id="CentOS是什么？"><a href="#CentOS是什么？" class="headerlink" title="CentOS是什么？"></a>CentOS是什么？</h3><p><strong>CentOS</strong>（Community Enterprise Operating System）是Linux发行版之一，它基于Red Hat Enterprise Linux（RHEL）的源代码编译而成，完全免费且企业级稳定。简单来说，CentOS就是<strong>免费的企业级Linux系统</strong>。</p>
+<h3 id="CentOS的典型应用场景"><a href="#CentOS的典型应用场景" class="headerlink" title="CentOS的典型应用场景"></a>CentOS的典型应用场景</h3><ul>
+<li><strong>服务器操作系统</strong>：绝大多数网站、应用的后台服务器运行CentOS</li>
+<li><strong>学习Linux</strong>：如果你想学习Linux运维，CentOS是最佳选择之一</li>
+<li><strong>开发环境</strong>：很多企业开发环境基于CentOS，本地搭建一致环境避免”水土不服”</li>
+<li><strong>容器基础镜像</strong>：Docker等容器技术常用CentOS作为基础镜像</li>
+</ul>
+<h3 id="为什么用虚拟机安装？"><a href="#为什么用虚拟机安装？" class="headerlink" title="为什么用虚拟机安装？"></a>为什么用虚拟机安装？</h3><p>通过虚拟机安装CentOS，你可以：</p>
+<ul>
+<li><strong>零风险学习</strong>：即使系统崩溃，也不会影响宿主机</li>
+<li><strong>随时还原</strong>：通过快照功能，可以随时回退到某个状态</li>
+<li><strong>模拟服务器环境</strong>：真实体验服务器运维的工作方式</li>
+<li><strong>一台电脑多系统</strong>：同时拥有Windows和Linux，互不干扰</li>
+</ul>
+<hr>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><h3 id="下载所需文件"><a href="#下载所需文件" class="headerlink" title="下载所需文件"></a>下载所需文件</h3><p><strong>VMware Workstation</strong></p>
+<ul>
+<li>访问VMware官网下载Workstation Pro</li>
+<li>个人使用可以选择免费试用版</li>
+</ul>
+<p>下载详情见<a href="https://zgj6017.github.io/2026/02/28/%E6%89%93%E9%80%A0%E5%B1%9E%E4%BA%8E%E4%BD%A0%E7%9A%84%E4%BA%91%E7%AB%AF%E5%AE%9E%E9%AA%8C%E5%AE%A4%EF%BC%9AVMware%E8%99%9A%E6%8B%9F%E6%9C%BA%E4%B8%8EFinalShell%E5%AE%8C%E7%BE%8E%E7%BB%84%E5%90%88%E5%AE%9E%E6%88%98%E6%8C%87%E5%8D%97/">打造属于你的云端实验室：VMware虚拟机与FinalShell完美组合实战指南</a></p>
+<p><strong>CentOS 10 ISO镜像</strong></p>
+<ul>
+<li>访问<a target="_blank" rel="noopener" href="https://www.centos.org/download/">CentOS</a>官网下载</li>
+<li>选择DVD ISO（约8-10GB）或Minimal ISO（约2GB）</li>
+<li>建议下载DVD ISO，包含常用软件包</li>
+<li><img src="/assets/image-20260228120051316.png" alt="image-20260228120051316"></li>
+</ul>
+<h3 id="检查宿主机环境"><a href="#检查宿主机环境" class="headerlink" title="检查宿主机环境"></a>检查宿主机环境</h3><ul>
+<li><strong>硬盘空间</strong>：至少20GB可用空间</li>
+<li><strong>内存</strong>：建议8GB以上（给虚拟机分配2-4GB）</li>
+<li><strong>CPU</strong>：支持虚拟化技术（BIOS中需开启VT-x&#x2F;AMD-V）</li>
+</ul>
+<hr>
+<h2 id="VMware虚拟机创建"><a href="#VMware虚拟机创建" class="headerlink" title="VMware虚拟机创建"></a>VMware虚拟机创建</h2><h3 id="新建虚拟机"><a href="#新建虚拟机" class="headerlink" title="新建虚拟机"></a>新建虚拟机</h3><ol>
+<li><strong>打开VMware</strong>，点击”创建新的虚拟机”或选择”文件 → 新建虚拟机”</li>
+<li><strong>选择配置类型</strong><ul>
+<li>选择”典型(推荐)” → 下一步</li>
+</ul>
+</li>
+<li><strong>安装来源选择</strong><ul>
+<li>选择”安装程序光盘映像文件(iso)”</li>
+<li>浏览选择已下载的CentOS 10 ISO文件</li>
+<li>→ 下一步</li>
+</ul>
+</li>
+<li><strong>客户机操作系统选择</strong><ul>
+<li>客户机操作系统：选择”Linux”</li>
+<li>版本：选择”CentOS 10”（如果没有exact版本，选择接近的如”CentOS 9”或”Red Hat Enterprise Linux 10”）</li>
+<li>→ 下一步</li>
+</ul>
+</li>
+<li><strong>命名虚拟机</strong><ul>
+<li>虚拟机名称：输入”CentOS 10”（或你喜欢的名字）</li>
+<li>位置：选择安装位置（建议有足够空间，至少20GB）</li>
+<li>→ 下一步</li>
+</ul>
+</li>
+<li><strong>指定磁盘容量</strong><ul>
+<li>最大磁盘大小：建议20GB以上</li>
+<li>选择”将虚拟磁盘存储为单个文件”（性能较好）</li>
+<li>→ 下一步</li>
+</ul>
+</li>
+<li><strong>自定义硬件（关键步骤！）</strong><ul>
+<li>点击”自定义硬件”</li>
+<li><strong>内存</strong>：建议2GB以上（根据宿主机配置调整）</li>
+<li><strong>处理器</strong>：至少1核，建议2核</li>
+<li><strong>新CD&#x2F;DVD</strong>：确认已连接ISO文件</li>
+<li><strong>网络适配器</strong>：<strong>务必选择”NAT模式”</strong>（这是后续联网的关键）</li>
+<li><strong>USB控制器、声卡、打印机</strong>：可以移除（不需要可去掉，减少资源占用）</li>
+<li>点击”关闭” → 完成</li>
+</ul>
+</li>
+</ol>
+<h3 id="虚拟机创建后的优化建议"><a href="#虚拟机创建后的优化建议" class="headerlink" title="虚拟机创建后的优化建议"></a>虚拟机创建后的优化建议</h3><p>在启动前，对虚拟机进行一些优化：</p>
+<table>
+<thead>
+<tr>
+<th align="left">配置项</th>
+<th align="left">建议</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">CPU</td>
+<td align="left">2核</td>
+<td align="left">提升编译和运行速度</td>
+</tr>
+<tr>
+<td align="left">内存</td>
+<td align="left">4GB</td>
+<td align="left">保证系统流畅运行</td>
+</tr>
+<tr>
+<td align="left">网络适配器</td>
+<td align="left">NAT模式</td>
+<td align="left">确保能通过宿主机上网</td>
+</tr>
+<tr>
+<td align="left">无用硬件</td>
+<td align="left">移除</td>
+<td align="left">减少资源占用</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="CentOS-10系统安装"><a href="#CentOS-10系统安装" class="headerlink" title="CentOS 10系统安装"></a>CentOS 10系统安装</h2><h3 id="启动安装程序"><a href="#启动安装程序" class="headerlink" title="启动安装程序"></a>启动安装程序</h3><ol>
+<li>点击”开启此虚拟机”</li>
+<li>等待系统启动，出现安装菜单</li>
+<li>选择”Install CentOS 10”（第一项），按回车</li>
+</ol>
+<h3 id="安装语言选择"><a href="#安装语言选择" class="headerlink" title="安装语言选择"></a>安装语言选择</h3><ul>
+<li>建议选择<strong>英文</strong>（English），避免后续命令行出现中文乱码</li>
+<li>点击”Continue”</li>
+</ul>
+<h3 id="关键安装配置"><a href="#关键安装配置" class="headerlink" title="关键安装配置"></a>关键安装配置</h3><h4 id="安装目的地（磁盘分区）"><a href="#安装目的地（磁盘分区）" class="headerlink" title="安装目的地（磁盘分区）"></a>安装目的地（磁盘分区）</h4><ul>
+<li>点击”Installation Destination”</li>
+<li>选择创建的虚拟磁盘（默认已选中）</li>
+<li>选择”Automatically configure partitioning”（自动分区）</li>
+<li>点击”Done”</li>
+</ul>
+<h4 id="网络与主机名（非常重要！）"><a href="#网络与主机名（非常重要！）" class="headerlink" title="网络与主机名（非常重要！）"></a>网络与主机名（非常重要！）</h4><ul>
+<li>点击”Network &amp; Host Name”</li>
+<li>应该能看到网卡（如ens33）</li>
+<li><strong>确保开关保持ON状态</strong>（安装时网卡必须开启）</li>
+<li>可以修改主机名（如<code>centos10.local</code>）</li>
+<li>点击”Apply” → “Done”</li>
+</ul>
+<h4 id="根密码与用户创建"><a href="#根密码与用户创建" class="headerlink" title="根密码与用户创建"></a>根密码与用户创建</h4><ul>
+<li><strong>Root Password</strong>：设置root密码（务必记住！）</li>
+<li><strong>User Creation</strong>：创建普通用户<ul>
+<li>用户名：如<code>centos</code>（或你喜欢的名字）</li>
+<li>勾选”Make this user administrator”（赋予sudo权限）</li>
+<li>设置密码</li>
+</ul>
+</li>
+</ul>
+<h4 id="软件选择（可选但推荐）"><a href="#软件选择（可选但推荐）" class="headerlink" title="软件选择（可选但推荐）"></a>软件选择（可选但推荐）</h4><ul>
+<li>点击”Software Selection”</li>
+<li>建议勾选”Development Tools”（开发工具），方便后续编译安装软件</li>
+<li>也可以根据需要选择”Server with GUI”（带图形界面）或最小化安装</li>
+<li>点击”Done”</li>
+</ul>
+<h3 id="开始安装"><a href="#开始安装" class="headerlink" title="开始安装"></a>开始安装</h3><ol>
+<li>确认所有配置无误后，点击”Begin Installation”</li>
+<li>等待安装完成（约5-10分钟，取决于硬件性能）</li>
+<li>安装完成后点击”Reboot System”</li>
+</ol>
+<hr>
+<h2 id="首次启动与网络问题发现"><a href="#首次启动与网络问题发现" class="headerlink" title="首次启动与网络问题发现"></a>首次启动与网络问题发现</h2><h3 id="首次登录"><a href="#首次登录" class="headerlink" title="首次登录"></a>首次登录</h3><ol>
+<li>系统重启后，看到登录界面</li>
+<li>使用之前创建的普通用户登录</li>
+<li>打开终端（Terminal）</li>
+</ol>
+<h3 id="验证网络状态——发现问题"><a href="#验证网络状态——发现问题" class="headerlink" title="验证网络状态——发现问题"></a>验证网络状态——发现问题</h3><p>登录后，立即查看网络状态：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip addr show</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>典型的问题现象</strong>（我遇到的情况）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ens33: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 ...</span><br><span class="line">    inet6 fe80::20c:29ff:feed:4bbc/64 scope link </span><br><span class="line">    # ⚠️ 注意：只有IPv6地址，没有IPv4地址！</span><br></pre></td></tr></table></figure>
+
+
+
+<p>尝试ping外网验证：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ping www.baidu.com</span><br><span class="line"># 失败：ping: www.baidu.com: 域名解析暂时失败</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>问题确认</strong>：虚拟机无法上网，没有获取到IPv4地址。</p>
+<hr>
+<h2 id="网络配置问题深度排查与解决"><a href="#网络配置问题深度排查与解决" class="headerlink" title="网络配置问题深度排查与解决"></a>网络配置问题深度排查与解决</h2><h3 id="第一反应：检查传统配置文件（会踩坑！）"><a href="#第一反应：检查传统配置文件（会踩坑！）" class="headerlink" title="第一反应：检查传统配置文件（会踩坑！）"></a>第一反应：检查传统配置文件（会踩坑！）</h3><p>按照以往CentOS的经验，很多朋友第一反应是修改网卡配置文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># ⚠️ 这个方法在CentOS 10中行不通！</span><br><span class="line">sudo vi /etc/sysconfig/network-scripts/ifcfg-ens33</span><br><span class="line"># 返回错误：没有那个文件或目录</span><br></pre></td></tr></table></figure>
+
+
+
+<p>如果尝试用sed批量修改：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo sed -i &#x27;s/^ONBOOT=no/ONBOOT=yes/&#x27; /etc/sysconfig/network-scripts/ifcfg-*</span><br><span class="line"># 错误：sed：无法读取 /etc/sysconfig/network-scripts/ifcfg-*：没有那个文件或目录</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="为什么传统方法失效了？"><a href="#为什么传统方法失效了？" class="headerlink" title="为什么传统方法失效了？"></a>为什么传统方法失效了？</h3><p><strong>原因分析</strong>：CentOS 10已经弃用了传统的<code>ifcfg-*</code>网络配置文件，改用<strong>NetworkManager全面管理网络</strong>，配置文件存储在<code>/etc/NetworkManager/system-connections/</code>目录下，使用keyfile格式。</p>
+<p>这正是很多新手（甚至老手）踩坑的地方！CentOS网络管理方式已经发生了根本性变化：</p>
+<table>
+<thead>
+<tr>
+<th align="left">CentOS版本</th>
+<th align="left">网络管理方式</th>
+<th align="left">配置文件位置</th>
+<th align="left">特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">CentOS 6</td>
+<td align="left">network service</td>
+<td align="left"><code>/etc/sysconfig/network-scripts/ifcfg-*</code></td>
+<td align="left">传统init脚本管理</td>
+</tr>
+<tr>
+<td align="left">CentOS 7&#x2F;8</td>
+<td align="left">NetworkManager + network</td>
+<td align="left">两者共存</td>
+<td align="left">过渡期，兼容旧配置</td>
+</tr>
+<tr>
+<td align="left">CentOS 9</td>
+<td align="left">NetworkManager only</td>
+<td align="left"><code>/etc/NetworkManager/system-connections/</code></td>
+<td align="left">全面接管网络</td>
+</tr>
+<tr>
+<td align="left">CentOS 10</td>
+<td align="left">NetworkManager only</td>
+<td align="left"><code>/etc/NetworkManager/system-connections/</code></td>
+<td align="left">keyfile格式</td>
+</tr>
+</tbody></table>
+<h3 id="正确排查方法"><a href="#正确排查方法" class="headerlink" title="正确排查方法"></a>正确排查方法</h3><p>首先，查看当前网络连接状态：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmcli con show</span><br></pre></td></tr></table></figure>
+
+
+
+<p>输出示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">NAME   UUID                                  TYPE      DEVICE </span><br><span class="line">ens33  12682173-76f8-3b31-b3e3-101e47012d73  ethernet  ens33  </span><br><span class="line">lo     705d26fd-5635-42fc-a2a9-47387ef01598  loopback  lo</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="解决方案一：使用nmcli命令行配置（推荐）"><a href="#解决方案一：使用nmcli命令行配置（推荐）" class="headerlink" title="解决方案一：使用nmcli命令行配置（推荐）"></a>解决方案一：使用nmcli命令行配置（推荐）</h3><p><strong>nmcli</strong>是NetworkManager的命令行工具，功能强大，适合远程操作和脚本编写：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 1. 查看当前连接（确认网卡名称）</span><br><span class="line">nmcli con show</span><br><span class="line"></span><br><span class="line"># 2. 设置开机自动连接</span><br><span class="line">sudo nmcli con mod ens33 connection.autoconnect yes</span><br><span class="line"></span><br><span class="line"># 3. 设置自动获取IP（DHCP）</span><br><span class="line">sudo nmcli con mod ens33 ipv4.method auto</span><br><span class="line"></span><br><span class="line"># 4. 重新激活连接</span><br><span class="line">sudo nmcli con up ens33</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="解决方案二：使用nmtui图形化界面（新手友好）"><a href="#解决方案二：使用nmtui图形化界面（新手友好）" class="headerlink" title="解决方案二：使用nmtui图形化界面（新手友好）"></a>解决方案二：使用nmtui图形化界面（新手友好）</h3><p>对于不熟悉命令行的朋友，可以使用文本界面工具<strong>nmtui</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 启动文本界面配置工具</span><br><span class="line">sudo nmtui</span><br></pre></td></tr></table></figure>
+
+
+
+<p>在界面中操作：</p>
+<ol>
+<li>选择 <strong>“Edit a connection”</strong> → 回车</li>
+<li>选择网卡 <strong>“ens33”</strong> → 选择 <strong>“Edit”</strong> → 回车</li>
+<li>确保以下设置正确：<ul>
+<li><strong>IPv4 CONFIGURATION</strong> &#x3D; <strong>“Automatic”</strong></li>
+<li><strong>Automatically connect</strong> &#x3D; <strong>“[X]”</strong>（已勾选）</li>
+</ul>
+</li>
+<li>选择 <strong>“OK”</strong> 保存</li>
+<li>选择 <strong>“Back”</strong> 返回主菜单 → <strong>“Quit”</strong> 退出</li>
+</ol>
+<h3 id="激活连接时可能遇到的错误"><a href="#激活连接时可能遇到的错误" class="headerlink" title="激活连接时可能遇到的错误"></a>激活连接时可能遇到的错误</h3><p>执行<code>nmcli con up ens33</code>时可能遇到：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">错误：连接激活失败：IP 配置无法保留（无可用地址、超时等）</span><br></pre></td></tr></table></figure>
+
+
+
+<p>这是另一个常见问题，通常与VMware服务或虚拟网络配置有关。</p>
+<h4 id="检查宿主机VMware服务"><a href="#检查宿主机VMware服务" class="headerlink" title="检查宿主机VMware服务"></a>检查宿主机VMware服务</h4><p>在Windows宿主机中：</p>
+<ol>
+<li>按<code>Win + R</code>输入<code>services.msc</code>回车</li>
+<li>找到以下两个服务：<ul>
+<li><strong>VMware NAT Service</strong></li>
+<li><strong>VMware DHCP Service</strong></li>
+</ul>
+</li>
+<li>确保状态为”正在运行”</li>
+<li>双击服务，将”启动类型”设为”自动”</li>
+<li>如果服务未运行，右键点击启动</li>
+</ol>
+<h4 id="检查VMware虚拟网络配置"><a href="#检查VMware虚拟网络配置" class="headerlink" title="检查VMware虚拟网络配置"></a>检查VMware虚拟网络配置</h4><ol>
+<li><strong>关闭CentOS虚拟机</strong></li>
+<li>VMware菜单 → <strong>编辑</strong> → <strong>虚拟网络编辑器</strong></li>
+<li>点击左下角 <strong>“更改设置”</strong>（需要管理员权限）</li>
+<li>选择 <strong>VMnet8</strong>（NAT模式）</li>
+<li>确认配置：<ul>
+<li>子网IP：通常是192.168.x.0</li>
+<li>子网掩码：255.255.255.0</li>
+<li><strong>勾选”使用本地DHCP服务将IP地址分配给虚拟机”</strong></li>
+</ul>
+</li>
+<li>点击 <strong>“NAT设置”</strong>，确认网关IP（通常是192.168.x.2）</li>
+<li>如果配置混乱，可以点击 <strong>“还原默认设置”</strong> 重置</li>
+</ol>
+<h4 id="手动触发DHCP请求"><a href="#手动触发DHCP请求" class="headerlink" title="手动触发DHCP请求"></a>手动触发DHCP请求</h4><p>在CentOS终端中：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 断开网卡连接</span><br><span class="line">sudo nmcli device disconnect ens33</span><br><span class="line"></span><br><span class="line"># 重新连接，触发DHCP请求</span><br><span class="line">sudo nmcli device connect ens33</span><br><span class="line"></span><br><span class="line"># 或者使用dhclient手动获取IP</span><br><span class="line">sudo dhclient -v ens33</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h2 id="验证网络配置成功"><a href="#验证网络配置成功" class="headerlink" title="验证网络配置成功"></a>验证网络配置成功</h2><h3 id="检查IP地址获取情况"><a href="#检查IP地址获取情况" class="headerlink" title="检查IP地址获取情况"></a>检查IP地址获取情况</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip addr show ens33</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>成功输出</strong>（包含IPv4地址）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ens33: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; ...</span><br><span class="line">    inet 192.168.40.128/24 brd 192.168.40.255 scope global dynamic ens33</span><br><span class="line">    inet6 fe80::20c:29ff:feed:4bbc/64 scope link </span><br></pre></td></tr></table></figure>
+
+
+
+<p>关键信息解读：</p>
+<ul>
+<li><code>inet 192.168.40.128/24</code> - 成功获取到IPv4地址</li>
+<li><code>dynamic</code> - 通过DHCP自动获取</li>
+<li><code>valid_lft 1786sec</code> - 租约有效期（会自动续约）</li>
+</ul>
+<h3 id="测试网络连通性"><a href="#测试网络连通性" class="headerlink" title="测试网络连通性"></a>测试网络连通性</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 测试网关连通性</span><br><span class="line">ping -c 2 192.168.40.2  # 网关地址根据实际修改</span><br><span class="line"></span><br><span class="line"># 测试外网连通性</span><br><span class="line">ping -c 4 www.baidu.com</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>成功响应示例</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">PING www.a.shifen.com (14.119.104.254) 56(84) bytes of data.</span><br><span class="line">64 bytes from 14.119.104.254: icmp_seq=1 ttl=128 time=30.1 ms</span><br><span class="line">64 bytes from 14.119.104.254: icmp_seq=2 ttl=128 time=29.8 ms</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="验证DNS解析"><a href="#验证DNS解析" class="headerlink" title="验证DNS解析"></a>验证DNS解析</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 测试域名解析</span><br><span class="line">nslookup www.baidu.com</span><br><span class="line"># 或</span><br><span class="line">dig www.baidu.com</span><br><span class="line"></span><br><span class="line"># 查看DNS配置</span><br><span class="line">cat /etc/resolv.conf</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="查看路由信息"><a href="#查看路由信息" class="headerlink" title="查看路由信息"></a>查看路由信息</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip route show</span><br></pre></td></tr></table></figure>
+
+
+
+<p>期望输出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">default via 192.168.40.2 dev ens33 proto dhcp src 192.168.40.128 metric 100</span><br><span class="line">192.168.40.0/24 dev ens33 proto kernel scope link src 192.168.40.128 metric 100</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h2 id="深入理解CentOS-10网络管理"><a href="#深入理解CentOS-10网络管理" class="headerlink" title="深入理解CentOS 10网络管理"></a>深入理解CentOS 10网络管理</h2><h3 id="为什么CentOS要改用NetworkManager？"><a href="#为什么CentOS要改用NetworkManager？" class="headerlink" title="为什么CentOS要改用NetworkManager？"></a>为什么CentOS要改用NetworkManager？</h3><p>NetworkManager是现代Linux系统的标准网络管理工具，它：</p>
+<ul>
+<li><strong>自动感知网络变化</strong>：插拔网线、切换WiFi自动响应</li>
+<li><strong>统一管理多种连接</strong>：有线、无线、VPN、移动宽带</li>
+<li><strong>支持多种配置源</strong>：DHCP、手动配置、VPN配置</li>
+<li><strong>提供统一接口</strong>：命令行（nmcli）、图形界面（nmtui）、GUI小程序</li>
+</ul>
+<h3 id="VMware网络模式详解"><a href="#VMware网络模式详解" class="headerlink" title="VMware网络模式详解"></a>VMware网络模式详解</h3><p><strong>NAT模式（推荐）</strong>：</p>
+<ul>
+<li>虚拟机通过宿主机共享上网</li>
+<li>虚拟机组成本地子网（如192.168.40.0&#x2F;24）</li>
+<li>宿主机作为网关和DHCP服务器</li>
+<li>适合大多数学习测试场景</li>
+</ul>
+<p><strong>桥接模式</strong>：</p>
+<ul>
+<li>虚拟机直接连接物理网络</li>
+<li>获取局域网真实IP</li>
+<li>需要局域网有可用IP地址</li>
+<li>适合需要对外提供服务的场景</li>
+</ul>
+<p><strong>仅主机模式</strong>：</p>
+<ul>
+<li>只能与宿主机通信</li>
+<li>无法访问外网</li>
+<li>用于完全隔离的测试环境</li>
+</ul>
+<h3 id="DHCP工作原理"><a href="#DHCP工作原理" class="headerlink" title="DHCP工作原理"></a>DHCP工作原理</h3><p>DHCP（动态主机配置协议）自动分配IP地址的过程：</p>
+<ol>
+<li><strong>DHCP Discover</strong>：客户端广播寻找DHCP服务器</li>
+<li><strong>DHCP Offer</strong>：服务器响应提供IP地址</li>
+<li><strong>DHCP Request</strong>：客户端请求使用该IP</li>
+<li><strong>DHCP ACK</strong>：服务器确认分配</li>
+</ol>
+<hr>
+<h2 id="常用网络管理命令速查表"><a href="#常用网络管理命令速查表" class="headerlink" title="常用网络管理命令速查表"></a>常用网络管理命令速查表</h2><h3 id="nmcli命令大全"><a href="#nmcli命令大全" class="headerlink" title="nmcli命令大全"></a>nmcli命令大全</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"># 查看所有连接</span><br><span class="line">nmcli con show</span><br><span class="line"></span><br><span class="line"># 查看所有设备状态</span><br><span class="line">nmcli device status</span><br><span class="line"></span><br><span class="line"># 查看特定连接详情</span><br><span class="line">nmcli con show ens33</span><br><span class="line"></span><br><span class="line"># 修改连接参数</span><br><span class="line">sudo nmcli con mod ens33 connection.autoconnect yes</span><br><span class="line">sudo nmcli con mod ens33 ipv4.method auto</span><br><span class="line">sudo nmcli con mod ens33 ipv4.addresses 192.168.40.100/24  # 设置静态IP</span><br><span class="line">sudo nmcli con mod ens33 ipv4.gateway 192.168.40.2</span><br><span class="line">sudo nmcli con mod ens33 ipv4.dns &quot;8.8.8.8 114.114.114.114&quot;</span><br><span class="line"></span><br><span class="line"># 激活/停用连接</span><br><span class="line">sudo nmcli con up ens33</span><br><span class="line">sudo nmcli con down ens33</span><br><span class="line"></span><br><span class="line"># 重新加载配置</span><br><span class="line">sudo nmcli con reload</span><br><span class="line"></span><br><span class="line"># 删除连接</span><br><span class="line">sudo nmcli con delete ens33</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="设备管理命令"><a href="#设备管理命令" class="headerlink" title="设备管理命令"></a>设备管理命令</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 查看设备状态</span><br><span class="line">nmcli dev status</span><br><span class="line"></span><br><span class="line"># 连接/断开设备</span><br><span class="line">sudo nmcli dev connect ens33</span><br><span class="line">sudo nmcli dev disconnect ens33</span><br><span class="line"></span><br><span class="line"># 查看设备详情</span><br><span class="line">nmcli dev show ens33</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="网络故障排查工具"><a href="#网络故障排查工具" class="headerlink" title="网络故障排查工具"></a>网络故障排查工具</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"># 查看网络服务日志</span><br><span class="line">sudo journalctl -u NetworkManager -f</span><br><span class="line"></span><br><span class="line"># 实时监控网络事件</span><br><span class="line">sudo journalctl -xe -u NetworkManager</span><br><span class="line"></span><br><span class="line"># 测试端口连通性</span><br><span class="line">telnet 8.8.8.8 53</span><br><span class="line">nc -zv 8.8.8.8 53</span><br><span class="line"></span><br><span class="line"># 跟踪路由路径</span><br><span class="line">traceroute www.baidu.com</span><br><span class="line"></span><br><span class="line"># 查看网络统计</span><br><span class="line">netstat -i</span><br><span class="line">ss -tunap</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h2 id="常见问题及解决方案"><a href="#常见问题及解决方案" class="headerlink" title="常见问题及解决方案"></a>常见问题及解决方案</h2><h3 id="网络配置问题"><a href="#网络配置问题" class="headerlink" title="网络配置问题"></a>网络配置问题</h3><p><strong>Q1: 虚拟机无法获取IP地址</strong></p>
+<ul>
+<li>检查VMware NAT&#x2F;DHCP服务是否运行</li>
+<li>检查虚拟网络编辑器中DHCP是否启用</li>
+<li>尝试手动触发：<code>sudo dhclient -v ens33</code></li>
+</ul>
+<p><strong>Q2: 能ping通IP但ping不通域名</strong></p>
+<ul>
+<li>DNS配置问题</li>
+<li>检查：<code>cat /etc/resolv.conf</code></li>
+<li>添加DNS：<code>sudo nmcli con mod ens33 ipv4.dns &quot;8.8.8.8&quot;</code></li>
+</ul>
+<p><strong>Q3: 重启后网络配置丢失</strong></p>
+<ul>
+<li>检查autoconnect设置：<code>nmcli con show ens33 | grep autoconnect</code></li>
+<li>重新设置：<code>sudo nmcli con mod ens33 connection.autoconnect yes</code></li>
+</ul>
+<p><strong>Q4: 网卡名称不是ens33</strong></p>
+<ul>
+<li>使用实际名称替换命令中的ens33</li>
+<li>查看实际名称：<code>nmcli con show</code> 或 <code>ip addr</code></li>
+</ul>
+<h3 id="系统配置问题"><a href="#系统配置问题" class="headerlink" title="系统配置问题"></a>系统配置问题</h3><p><strong>Q5: sudo命令提示用户不在sudoers中</strong></p>
+<ul>
+<li>切换到root：<code>su -</code></li>
+<li>添加用户：<code>usermod -aG wheel 用户名</code></li>
+<li>或编辑：<code>visudo</code> 添加 <code>用户名 ALL=(ALL) ALL</code></li>
+</ul>
+<p><strong>Q6: 安装时没创建普通用户</strong></p>
+<ul>
+<li>创建用户：<code>useradd -m 用户名</code></li>
+<li>设置密码：<code>passwd 用户名</code></li>
+<li>添加sudo权限：<code>usermod -aG wheel 用户名</code></li>
+</ul>
+<hr>
+<h2 id="优化与个性化配置"><a href="#优化与个性化配置" class="headerlink" title="优化与个性化配置"></a>优化与个性化配置</h2><h3 id="设置静态IP（可选）"><a href="#设置静态IP（可选）" class="headerlink" title="设置静态IP（可选）"></a>设置静态IP（可选）</h3><p>如果需要固定IP地址（如搭建服务器）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 1. 查看当前网络信息</span><br><span class="line">ip route show</span><br><span class="line"></span><br><span class="line"># 2. 修改为静态IP</span><br><span class="line">sudo nmcli con mod ens33 ipv4.method manual</span><br><span class="line">sudo nmcli con mod ens33 ipv4.addresses 192.168.40.200/24</span><br><span class="line">sudo nmcli con mod ens33 ipv4.gateway 192.168.40.2</span><br><span class="line">sudo nmcli con mod ens33 ipv4.dns &quot;8.8.8.8 114.114.114.114&quot;</span><br><span class="line"></span><br><span class="line"># 3. 重新激活</span><br><span class="line">sudo nmcli con up ens33</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="配置主机名"><a href="#配置主机名" class="headerlink" title="配置主机名"></a>配置主机名</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 查看当前主机名</span><br><span class="line">hostnamectl</span><br><span class="line"></span><br><span class="line"># 设置主机名</span><br><span class="line">sudo hostnamectl set-hostname centos10.local</span><br><span class="line"></span><br><span class="line"># 修改hosts文件</span><br><span class="line">sudo vi /etc/hosts</span><br><span class="line"># 添加：192.168.40.128 centos10.local</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="安装常用工具"><a href="#安装常用工具" class="headerlink" title="安装常用工具"></a>安装常用工具</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 更新系统</span><br><span class="line">sudo dnf update -y</span><br><span class="line"></span><br><span class="line"># 安装常用工具</span><br><span class="line">sudo dnf install -y vim wget curl net-tools telnet</span><br><span class="line">sudo dnf install -y bash-completion  # 命令行补全</span><br><span class="line">sudo dnf install -y epel-release     # 额外软件源</span><br><span class="line"></span><br><span class="line"># 开发工具（如果需要）</span><br><span class="line">sudo dnf groupinstall -y &quot;Development Tools&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="SSH服务配置（远程访问）"><a href="#SSH服务配置（远程访问）" class="headerlink" title="SSH服务配置（远程访问）"></a>SSH服务配置（远程访问）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 安装SSH服务</span><br><span class="line">sudo dnf install -y openssh-server</span><br><span class="line"></span><br><span class="line"># 启动SSH服务</span><br><span class="line">sudo systemctl start sshd</span><br><span class="line">sudo systemctl enable sshd</span><br><span class="line"></span><br><span class="line"># 查看IP</span><br><span class="line">ip addr show ens33</span><br><span class="line"># 在宿主机上通过SSH连接：ssh 用户名@192.168.40.128</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h2 id="备份与恢复技巧"><a href="#备份与恢复技巧" class="headerlink" title="备份与恢复技巧"></a>备份与恢复技巧</h2><h3 id="虚拟机快照（强烈推荐）"><a href="#虚拟机快照（强烈推荐）" class="headerlink" title="虚拟机快照（强烈推荐）"></a>虚拟机快照（强烈推荐）</h3><p>配置好网络后，建议创建快照：</p>
+<ol>
+<li>关闭虚拟机或关机</li>
+<li>VMware菜单 → <strong>虚拟机</strong> → <strong>快照</strong> → <strong>拍摄快照</strong></li>
+<li>命名如”Network_Configured”</li>
+<li>描述：”网络已配置好，可正常上网”</li>
+</ol>
+<p>这样，无论以后怎么折腾系统，都可以一键恢复到网络正常的状态。</p>
+<h3 id="网络配置备份"><a href="#网络配置备份" class="headerlink" title="网络配置备份"></a>网络配置备份</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 备份NetworkManager连接配置</span><br><span class="line">sudo cp -r /etc/NetworkManager/system-connections/ ~/network-backup/</span><br><span class="line"></span><br><span class="line"># 导出特定连接配置</span><br><span class="line">sudo nmcli con export ens33 &gt; ~/ens33-backup.nmconnection</span><br><span class="line"></span><br><span class="line"># 恢复配置</span><br><span class="line">sudo nmcli con import type ethernet file ~/ens33-backup.nmconnection</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<p>通过本文的完整流程，你应该能够：</p>
+<p>✅ 理解CentOS是什么及虚拟机的价值<br>✅ 成功在VMware中创建CentOS 10虚拟机<br>✅ 顺利完成CentOS 10系统安装<br>✅ 理解CentOS网络管理的变迁（为什么传统方法失效）<br>✅ 掌握nmcli和nmtui配置网络的方法<br>✅ 解决常见的网络故障（VMware服务问题、DHCP问题等）<br>✅ 了解网络配置的原理和技巧<br>✅ 学会备份和快照，防止问题重现</p>
+<p>CentOS 10的网络配置方式相比老版本有了较大变化，但掌握了<code>nmcli</code>和<code>nmtui</code>的使用方法后，配置起来反而更加简单直观。更重要的是，这些工具也是真实服务器运维中的标准配置——提前掌握这些技能，对你未来的工作和学习都大有裨益。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/CentOS-10/" rel="tag"># CentOS 10</a>
+              <a href="/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/" rel="tag"># 虚拟机</a>
+              <a href="/tags/%E6%96%B0%E6%89%8B%E5%85%A5%E9%97%A8/" rel="tag"># 新手入门</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/02/28/SSH%E8%BF%9C%E7%A8%8B%E7%AE%A1%E7%90%86%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E2%80%94%E2%80%94%20%E4%B8%80%E7%AF%87%E8%AE%B2%E9%80%8FSSH%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E4%B8%8E%E5%BA%94%E7%94%A8/" rel="prev" title="SSH远程管理是什么？—— 一篇讲透SSH的核心概念与应用">
+                  <i class="fa fa-angle-left"></i> SSH远程管理是什么？—— 一篇讲透SSH的核心概念与应用
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">6017</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
