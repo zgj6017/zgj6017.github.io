@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous" defer></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zgj6017.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="在上一篇文章中，我们多次提到了通过SSH连接虚拟机、使用FinalShell进行远程管理等概念。很多新手朋友可能会问：SSH到底是什么？为什么远程管理离不开它？今天，就让我们深入浅出地聊聊SSH远程管理这个话题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SSH远程管理是什么？—— 一篇讲透SSH的核心概念与应用">
+<meta property="og:url" content="https://zgj6017.github.io/2026/02/28/SSH%E8%BF%9C%E7%A8%8B%E7%AE%A1%E7%90%86%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E2%80%94%E2%80%94%20%E4%B8%80%E7%AF%87%E8%AE%B2%E9%80%8FSSH%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E4%B8%8E%E5%BA%94%E7%94%A8/index.html">
+<meta property="og:site_name" content="6017">
+<meta property="og:description" content="在上一篇文章中，我们多次提到了通过SSH连接虚拟机、使用FinalShell进行远程管理等概念。很多新手朋友可能会问：SSH到底是什么？为什么远程管理离不开它？今天，就让我们深入浅出地聊聊SSH远程管理这个话题。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-02-28T03:30:00.000Z">
+<meta property="article:modified_time" content="2026-03-01T09:12:47.795Z">
+<meta property="article:author" content="6017">
+<meta property="article:tag" content="协议解析">
+<meta property="article:tag" content="网络安全">
+<meta property="article:tag" content="运维基础">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://zgj6017.github.io/2026/02/28/SSH%E8%BF%9C%E7%A8%8B%E7%AE%A1%E7%90%86%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E2%80%94%E2%80%94%20%E4%B8%80%E7%AF%87%E8%AE%B2%E9%80%8FSSH%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E4%B8%8E%E5%BA%94%E7%94%A8/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zgj6017.github.io/2026/02/28/SSH%E8%BF%9C%E7%A8%8B%E7%AE%A1%E7%90%86%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E2%80%94%E2%80%94%20%E4%B8%80%E7%AF%87%E8%AE%B2%E9%80%8FSSH%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E4%B8%8E%E5%BA%94%E7%94%A8/","path":"2026/02/28/SSH远程管理是什么？—— 一篇讲透SSH的核心概念与应用/","title":"SSH远程管理是什么？—— 一篇讲透SSH的核心概念与应用"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>SSH远程管理是什么？—— 一篇讲透SSH的核心概念与应用 | 6017</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+  <script src="/js/third-party/pace.js" defer></script>
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">6017</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">记录学习与生活</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E%E4%B8%80%E4%B8%AA%E7%94%9F%E6%B4%BB%E5%9C%BA%E6%99%AF%E5%BC%80%E5%A7%8B%E7%90%86%E8%A7%A3"><span class="nav-number">1.</span> <span class="nav-text">从一个生活场景开始理解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFSSH%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">什么是SSH？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SSH%E7%9A%84%E4%B8%89%E4%B8%AA%E6%A0%B8%E5%BF%83%E4%BD%9C%E7%94%A8"><span class="nav-number">2.1.</span> <span class="nav-text">SSH的三个核心作用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81SSH%EF%BC%9F%E4%B8%8D%E7%94%A8SSH%E4%BC%9A%E6%80%8E%E6%A0%B7%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">为什么需要SSH？不用SSH会怎样？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SSH%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">4.</span> <span class="nav-text">SSH的工作原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%89%88%E6%9C%AC%E5%8D%8F%E5%95%86"><span class="nav-number">4.1.</span> <span class="nav-text">1. 版本协商</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E7%AE%97%E6%B3%95%E5%8D%8F%E5%95%86"><span class="nav-number">4.2.</span> <span class="nav-text">2. 算法协商</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%AF%86%E9%92%A5%E4%BA%A4%E6%8D%A2"><span class="nav-number">4.3.</span> <span class="nav-text">3. 密钥交换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E7%94%A8%E6%88%B7%E8%AE%A4%E8%AF%81"><span class="nav-number">4.4.</span> <span class="nav-text">4. 用户认证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E5%BC%80%E5%A7%8B%E4%BC%9A%E8%AF%9D"><span class="nav-number">4.5.</span> <span class="nav-text">5. 开始会话</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SSH%E7%9A%84%E4%B8%A4%E7%A7%8D%E8%AE%A4%E8%AF%81%E6%96%B9%E5%BC%8F%E8%AF%A6%E8%A7%A3"><span class="nav-number">5.</span> <span class="nav-text">SSH的两种认证方式详解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%86%E7%A0%81%E8%AE%A4%E8%AF%81"><span class="nav-number">5.1.</span> <span class="nav-text">密码认证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%86%E9%92%A5%E8%AE%A4%E8%AF%81"><span class="nav-number">5.2.</span> <span class="nav-text">密钥认证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84SSH%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-number">6.</span> <span class="nav-text">常见的SSH客户端</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Windows%E5%B9%B3%E5%8F%B0"><span class="nav-number">6.1.</span> <span class="nav-text">Windows平台</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#macOS-Linux%E5%B9%B3%E5%8F%B0"><span class="nav-number">6.2.</span> <span class="nav-text">macOS&#x2F;Linux平台</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%A8%E5%B9%B3%E5%8F%B0-Web%E7%AB%AF"><span class="nav-number">6.3.</span> <span class="nav-text">跨平台&#x2F;Web端</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SSH%E5%9C%A8%E6%97%A5%E5%B8%B8%E5%B7%A5%E4%BD%9C%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">7.</span> <span class="nav-text">SSH在日常工作中的应用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AE%A1%E7%90%86"><span class="nav-number">7.1.</span> <span class="nav-text">1. 服务器管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93"><span class="nav-number">7.2.</span> <span class="nav-text">2. 文件传输</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91%EF%BC%88%E9%9A%A7%E9%81%93%EF%BC%89"><span class="nav-number">7.3.</span> <span class="nav-text">3. 端口转发（隧道）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4"><span class="nav-number">7.4.</span> <span class="nav-text">4. 自动化运维</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SSH%E4%B8%8E%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9A%84%E5%AE%8C%E7%BE%8E%E9%85%8D%E5%90%88"><span class="nav-number">8.</span> <span class="nav-text">SSH与虚拟机的完美配合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81SSH%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5"><span class="nav-number">9.</span> <span class="nav-text">常见SSH命令速查</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="nav-number">10.</span> <span class="nav-text">安全问题与最佳实践</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%A6%81%E7%94%A8root%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95"><span class="nav-number">10.1.</span> <span class="nav-text">1. 禁用root密码登录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%9B%B4%E6%94%B9%E9%BB%98%E8%AE%A4%E7%AB%AF%E5%8F%A3"><span class="nav-number">10.2.</span> <span class="nav-text">2. 更改默认端口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E4%BD%BF%E7%94%A8%E5%AF%86%E9%92%A5%E8%AE%A4%E8%AF%81%EF%BC%8C%E7%A6%81%E7%94%A8%E5%AF%86%E7%A0%81%E8%AE%A4%E8%AF%81"><span class="nav-number">10.3.</span> <span class="nav-text">3. 使用密钥认证，禁用密码认证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E9%99%90%E5%88%B6%E7%99%BB%E5%BD%95%E7%94%A8%E6%88%B7"><span class="nav-number">10.4.</span> <span class="nav-text">4. 限制登录用户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E9%85%8D%E7%BD%AE%E9%98%B2%E7%81%AB%E5%A2%99"><span class="nav-number">10.5.</span> <span class="nav-text">5. 配置防火墙</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E5%AE%89%E8%A3%85Fail2ban"><span class="nav-number">10.6.</span> <span class="nav-text">6. 安装Fail2ban</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">11.</span> <span class="nav-text">结语</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="6017"
+      src="https://github.com/zgj6017.png">
+  <p class="site-author-name" itemprop="name">6017</p>
+  <div class="site-description" itemprop="description">在白云看了《硅谷之火》这本书后，想成为雷布斯的小佬</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zgj6017" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zgj6017" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zgj6017.github.io/2026/02/28/SSH%E8%BF%9C%E7%A8%8B%E7%AE%A1%E7%90%86%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E2%80%94%E2%80%94%20%E4%B8%80%E7%AF%87%E8%AE%B2%E9%80%8FSSH%E7%9A%84%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E4%B8%8E%E5%BA%94%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://github.com/zgj6017.png">
+      <meta itemprop="name" content="6017">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="6017">
+      <meta itemprop="description" content="在白云看了《硅谷之火》这本书后，想成为雷布斯的小佬">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="SSH远程管理是什么？—— 一篇讲透SSH的核心概念与应用 | 6017">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SSH远程管理是什么？—— 一篇讲透SSH的核心概念与应用
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-02-28 11:30:00" itemprop="dateCreated datePublished" datetime="2026-02-28T11:30:00+08:00">2026-02-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-03-01 17:12:47" itemprop="dateModified" datetime="2026-03-01T17:12:47+08:00">2026-03-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E7%A7%91%E6%99%AE/" itemprop="url" rel="index"><span itemprop="name">技术科普</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>在上一篇文章中，我们多次提到了通过SSH连接虚拟机、使用FinalShell进行远程管理等概念。很多新手朋友可能会问：SSH到底是什么？为什么远程管理离不开它？今天，就让我们深入浅出地聊聊SSH远程管理这个话题。</p>
+<span id="more"></span>
+
+<h2 id="从一个生活场景开始理解"><a href="#从一个生活场景开始理解" class="headerlink" title="从一个生活场景开始理解"></a>从一个生活场景开始理解</h2><p>想象这样一个场景：你是一家公司的IT管理员，公司的服务器放在专门的机房（或者云上）。有一天，服务器出了问题需要处理，但你不可能每次都跑到机房去操作——也许服务器在另一个城市，甚至另一个国家。</p>
+<p>这时，你需要一种方式，能让你坐在自己的电脑前，像直接操作那台服务器一样，输入命令、修改配置、启动服务。这就是<strong>远程管理</strong>。</p>
+<p>而<strong>SSH</strong>，就是实现这种远程管理的最主流、最安全的方式。</p>
+<h2 id="什么是SSH？"><a href="#什么是SSH？" class="headerlink" title="什么是SSH？"></a>什么是SSH？</h2><p><strong>SSH</strong> 是 <strong>Secure Shell</strong> 的缩写，中文译为“安全外壳协议”。它是一种网络协议，用于在不可信的网络中安全地远程登录和执行命令。</p>
+<p>简单来说，SSH就像是你和服务器之间的一条<strong>加密的安全隧道</strong>。所有通过这条隧道传输的数据都会被加密，即使被黑客截获，也无法解读其中的内容。</p>
+<h3 id="SSH的三个核心作用"><a href="#SSH的三个核心作用" class="headerlink" title="SSH的三个核心作用"></a>SSH的三个核心作用</h3><ol>
+<li><strong>远程登录</strong>：像坐在服务器前一样操作远程电脑</li>
+<li><strong>命令执行</strong>：在远程服务器上执行各种命令</li>
+<li><strong>文件传输</strong>：配合SFTP或SCP协议，安全地传输文件</li>
+</ol>
+<h2 id="为什么需要SSH？不用SSH会怎样？"><a href="#为什么需要SSH？不用SSH会怎样？" class="headerlink" title="为什么需要SSH？不用SSH会怎样？"></a>为什么需要SSH？不用SSH会怎样？</h2><p>在没有SSH之前，管理员主要使用<strong>Telnet</strong>进行远程管理。但Telnet有一个致命缺陷：<strong>所有数据都是明文传输</strong>，包括用户名和密码。</p>
+<p>这意味着什么？如果你的网络被监听，黑客可以轻松截获你的登录信息，直接接管服务器。这就像把家门钥匙放在门口垫子下面，谁都可以拿走。</p>
+<p>SSH的出现彻底解决了这个问题，它提供了：</p>
+<ul>
+<li><strong>加密通信</strong>：所有数据加密传输，即使被截获也无法破解</li>
+<li><strong>身份验证</strong>：支持密码和密钥两种验证方式，更安全灵活</li>
+<li><strong>数据完整性</strong>：确保传输过程中数据没有被篡改</li>
+</ul>
+<h2 id="SSH的工作原理"><a href="#SSH的工作原理" class="headerlink" title="SSH的工作原理"></a>SSH的工作原理</h2><p>SSH的工作原理可以简化为以下几个步骤：</p>
+<h3 id="1-版本协商"><a href="#1-版本协商" class="headerlink" title="1. 版本协商"></a>1. 版本协商</h3><p>客户端和服务器握手，确认双方使用的SSH版本。</p>
+<h3 id="2-算法协商"><a href="#2-算法协商" class="headerlink" title="2. 算法协商"></a>2. 算法协商</h3><p>双方商量好用什么加密算法、什么压缩方式，达成一致。</p>
+<h3 id="3-密钥交换"><a href="#3-密钥交换" class="headerlink" title="3. 密钥交换"></a>3. 密钥交换</h3><p>这是最核心的一步。双方通过一系列复杂的数学运算，在网络上公开交换信息，最终计算出只有双方知道的<strong>会话密钥</strong>。即使所有交换过程被监听，也无法推算出这个密钥。</p>
+<h3 id="4-用户认证"><a href="#4-用户认证" class="headerlink" title="4. 用户认证"></a>4. 用户认证</h3><p>连接建立后，服务器验证用户身份。主要有两种方式：</p>
+<ul>
+<li><strong>密码认证</strong>：输入用户名和密码</li>
+<li><strong>密钥认证</strong>：使用一对密钥（公钥和私钥）进行验证，更安全，也是自动化运维的标配</li>
+</ul>
+<h3 id="5-开始会话"><a href="#5-开始会话" class="headerlink" title="5. 开始会话"></a>5. 开始会话</h3><p>认证通过，你就可以在远程服务器上愉快地操作了！</p>
+<h2 id="SSH的两种认证方式详解"><a href="#SSH的两种认证方式详解" class="headerlink" title="SSH的两种认证方式详解"></a>SSH的两种认证方式详解</h2><h3 id="密码认证"><a href="#密码认证" class="headerlink" title="密码认证"></a>密码认证</h3><p>这是最直接的方式：客户端向服务器发送用户名和密码，服务器验证通过即可登录。</p>
+<p><strong>优点</strong>：简单直接，无需额外配置<br><strong>缺点</strong>：容易受到暴力破解攻击；每次登录都需要输入密码</p>
+<h3 id="密钥认证"><a href="#密钥认证" class="headerlink" title="密钥认证"></a>密钥认证</h3><p>这是更推荐的方式，需要先生成一对密钥：</p>
+<ul>
+<li><strong>私钥</strong>：相当于你的家门钥匙，必须妥善保管，绝不能外泄</li>
+<li><strong>公钥</strong>：相当于锁，可以放心地放在任何需要登录的服务器上</li>
+</ul>
+<p>登录过程：</p>
+<ol>
+<li>客户端向服务器发送登录请求，并告知要使用哪个公钥</li>
+<li>服务器用对应的公钥加密一个随机数，发给客户端</li>
+<li>客户端如果能用私钥解密这个随机数，就证明了自己的身份</li>
+<li>认证通过，允许登录</li>
+</ol>
+<p><strong>优点</strong>：无法暴力破解；可以实现免密码登录；适合自动化脚本<br><strong>缺点</strong>：初次配置稍复杂</p>
+<h2 id="常见的SSH客户端"><a href="#常见的SSH客户端" class="headerlink" title="常见的SSH客户端"></a>常见的SSH客户端</h2><p>除了我们在上一篇文章中介绍的<strong>FinalShell</strong>，还有很多优秀的SSH客户端：</p>
+<h3 id="Windows平台"><a href="#Windows平台" class="headerlink" title="Windows平台"></a>Windows平台</h3><ul>
+<li><strong>PuTTY</strong>：轻量级的老牌SSH客户端，免费开源</li>
+<li><strong>Xshell</strong>：功能强大的专业工具，个人免费</li>
+<li><strong>Windows Terminal</strong>：微软官方终端，支持SSH命令</li>
+<li><strong>MobaXterm</strong>：集成了多种远程工具的多合一神器</li>
+</ul>
+<h3 id="macOS-Linux平台"><a href="#macOS-Linux平台" class="headerlink" title="macOS&#x2F;Linux平台"></a>macOS&#x2F;Linux平台</h3><ul>
+<li><strong>系统自带终端</strong>：直接使用<code>ssh</code>命令，简单高效</li>
+<li><strong>Termius</strong>：跨平台，界面美观，支持同步配置</li>
+<li><strong>iTerm2</strong>：macOS上的终端神器，配合SSH命令使用</li>
+</ul>
+<h3 id="跨平台-Web端"><a href="#跨平台-Web端" class="headerlink" title="跨平台&#x2F;Web端"></a>跨平台&#x2F;Web端</h3><ul>
+<li><strong>FinalShell</strong>：国产优秀工具，我们之前介绍的主角</li>
+<li><strong>WebSSH</strong>：通过浏览器进行SSH连接，无需安装客户端</li>
+</ul>
+<h2 id="SSH在日常工作中的应用场景"><a href="#SSH在日常工作中的应用场景" class="headerlink" title="SSH在日常工作中的应用场景"></a>SSH在日常工作中的应用场景</h2><h3 id="1-服务器管理"><a href="#1-服务器管理" class="headerlink" title="1. 服务器管理"></a>1. 服务器管理</h3><p>这是最基本也是最重要的应用。无论是云服务器还是本地虚拟机，通过SSH可以执行所有管理任务：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 连接服务器</span><br><span class="line">ssh username@server_ip</span><br><span class="line"></span><br><span class="line"># 执行命令</span><br><span class="line">ssh username@server_ip &quot;ls -la&quot;</span><br><span class="line"></span><br><span class="line"># 重启服务</span><br><span class="line">ssh username@server_ip &quot;sudo systemctl restart nginx&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-文件传输"><a href="#2-文件传输" class="headerlink" title="2. 文件传输"></a>2. 文件传输</h3><p>配合SFTP或SCP，可以安全地传输文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 上传文件</span><br><span class="line">scp local_file username@server_ip:/remote/path/</span><br><span class="line"></span><br><span class="line"># 下载文件</span><br><span class="line">scp username@server_ip:/remote/file.txt ./local/</span><br><span class="line"></span><br><span class="line"># 传输整个目录</span><br><span class="line">scp -r local_folder username@server_ip:/remote/path/</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-端口转发（隧道）"><a href="#3-端口转发（隧道）" class="headerlink" title="3. 端口转发（隧道）"></a>3. 端口转发（隧道）</h3><p>SSH还可以创建安全隧道，将本地端口转发到远程服务器，或者反过来：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 本地端口转发：访问本地端口就像访问远程服务</span><br><span class="line">ssh -L 8080:internal-server:80 username@gateway-server</span><br><span class="line"></span><br><span class="line"># 远程端口转发：让外部访问你本地的服务</span><br><span class="line">ssh -R 8080:localhost:80 username@public-server</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4-自动化运维"><a href="#4-自动化运维" class="headerlink" title="4. 自动化运维"></a>4. 自动化运维</h3><p>结合密钥认证，SSH可以用于编写自动化脚本，批量管理多台服务器：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"># 批量更新多台服务器的代码</span><br><span class="line">servers=(&quot;192.168.1.10&quot; &quot;192.168.1.11&quot; &quot;192.168.1.12&quot;)</span><br><span class="line">for server in &quot;$&#123;servers[@]&#125;&quot;; do</span><br><span class="line">    ssh user@$server &quot;cd /app &amp;&amp; git pull &amp;&amp; sudo systemctl restart app&quot;</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="SSH与虚拟机的完美配合"><a href="#SSH与虚拟机的完美配合" class="headerlink" title="SSH与虚拟机的完美配合"></a>SSH与虚拟机的完美配合</h2><p>回到我们上一篇文章的主题：<strong>VMware虚拟机 + FinalShell</strong>。现在你应该能更好地理解这个组合的意义了：</p>
+<ol>
+<li><strong>VMware虚拟机</strong>：提供了需要被管理的“服务器”（虽然它运行在你的本地电脑上）</li>
+<li><strong>SSH服务</strong>：在虚拟机中开启SSH服务，让它具备被远程管理的能力</li>
+<li><strong>FinalShell</strong>：作为SSH客户端，通过SSH协议连接和管理虚拟机</li>
+</ol>
+<p>这正是模拟真实生产环境的最佳方式——大多数云服务器都是通过SSH进行管理的，几乎没有图形界面。提前熟悉这种工作方式，对你未来从事运维或开发工作大有裨益。</p>
+<h2 id="常见SSH命令速查"><a href="#常见SSH命令速查" class="headerlink" title="常见SSH命令速查"></a>常见SSH命令速查</h2><table>
+<thead>
+<tr>
+<th align="left">命令</th>
+<th align="left">说明</th>
+<th align="left">示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>ssh user@host</code></td>
+<td align="left">连接远程主机</td>
+<td align="left"><code>ssh root@192.168.1.100</code></td>
+</tr>
+<tr>
+<td align="left"><code>ssh -p port user@host</code></td>
+<td align="left">指定端口连接</td>
+<td align="left"><code>ssh -p 2222 admin@server.com</code></td>
+</tr>
+<tr>
+<td align="left"><code>ssh-keygen</code></td>
+<td align="left">生成密钥对</td>
+<td align="left"><code>ssh-keygen -t rsa -b 4096</code></td>
+</tr>
+<tr>
+<td align="left"><code>ssh-copy-id user@host</code></td>
+<td align="left">复制公钥到服务器</td>
+<td align="left"><code>ssh-copy-id user@192.168.1.100</code></td>
+</tr>
+<tr>
+<td align="left"><code>scp file user@host:/path</code></td>
+<td align="left">复制文件到服务器</td>
+<td align="left"><code>scp app.jar root@server:/opt/</code></td>
+</tr>
+<tr>
+<td align="left"><code>ssh -L port:host:hostport user@host</code></td>
+<td align="left">本地端口转发</td>
+<td align="left"><code>ssh -L 3306:localhost:3306 user@db-server</code></td>
+</tr>
+</tbody></table>
+<h2 id="安全问题与最佳实践"><a href="#安全问题与最佳实践" class="headerlink" title="安全问题与最佳实践"></a>安全问题与最佳实践</h2><p>使用SSH虽然安全，但如果配置不当，仍然存在风险。以下是一些最佳实践：</p>
+<h3 id="1-禁用root密码登录"><a href="#1-禁用root密码登录" class="headerlink" title="1. 禁用root密码登录"></a>1. 禁用root密码登录</h3><p>编辑SSH配置文件<code>/etc/ssh/sshd_config</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PermitRootLogin prohibit-password  # 仅允许密钥登录</span><br><span class="line">PasswordAuthentication no          # 禁用密码认证</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-更改默认端口"><a href="#2-更改默认端口" class="headerlink" title="2. 更改默认端口"></a>2. 更改默认端口</h3><p>将默认的22端口改为其他端口，可以有效减少暴力破解尝试：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Port 2222  # 改为其他端口</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-使用密钥认证，禁用密码认证"><a href="#3-使用密钥认证，禁用密码认证" class="headerlink" title="3. 使用密钥认证，禁用密码认证"></a>3. 使用密钥认证，禁用密码认证</h3><p>如前所述，密钥认证比密码认证安全得多。</p>
+<h3 id="4-限制登录用户"><a href="#4-限制登录用户" class="headerlink" title="4. 限制登录用户"></a>4. 限制登录用户</h3><p>指定哪些用户可以SSH登录：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AllowUsers user1 user2  # 仅允许这两个用户登录</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="5-配置防火墙"><a href="#5-配置防火墙" class="headerlink" title="5. 配置防火墙"></a>5. 配置防火墙</h3><p>只允许特定IP访问SSH端口：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># 使用iptables或firewalld限制访问来源</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="6-安装Fail2ban"><a href="#6-安装Fail2ban" class="headerlink" title="6. 安装Fail2ban"></a>6. 安装Fail2ban</h3><p>自动检测并封禁多次登录失败的IP。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>SSH是现代IT基础设施的基石之一。无论你是开发者、运维工程师，还是正在学习Linux的学生，掌握SSH都是必不可少的基本功。</p>
+<p>通过SSH，你可以轻松管理位于世界任何角落的服务器；配合VMware虚拟机，你可以在本地搭建实验环境，安全地练习各种操作；再加上FinalShell这样的优秀客户端，你的工作效率将得到极大提升。</p>
+<p>现在，当你再次打开<a href="https://zgj6017.github.io/2026/02/28/%E6%89%93%E9%80%A0%E5%B1%9E%E4%BA%8E%E4%BD%A0%E7%9A%84%E4%BA%91%E7%AB%AF%E5%AE%9E%E9%AA%8C%E5%AE%A4%EF%BC%9AVMware%E8%99%9A%E6%8B%9F%E6%9C%BA%E4%B8%8EFinalShell%E5%AE%8C%E7%BE%8E%E7%BB%84%E5%90%88%E5%AE%9E%E6%88%98%E6%8C%87%E5%8D%97/">FinalShell连接虚拟机</a>时，你应该更清楚地知道背后发生了什么——SSH协议正在默默工作，为你和服务器之间搭建起一条安全、可靠的通道。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" rel="tag"># 网络安全</a>
+              <a href="/tags/%E5%8D%8F%E8%AE%AE%E8%A7%A3%E6%9E%90/" rel="tag"># 协议解析</a>
+              <a href="/tags/%E8%BF%90%E7%BB%B4%E5%9F%BA%E7%A1%80/" rel="tag"># 运维基础</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/02/28/%E6%89%93%E9%80%A0%E5%B1%9E%E4%BA%8E%E4%BD%A0%E7%9A%84%E4%BA%91%E7%AB%AF%E5%AE%9E%E9%AA%8C%E5%AE%A4%EF%BC%9AVMware%E8%99%9A%E6%8B%9F%E6%9C%BA%E4%B8%8EFinalShell%E5%AE%8C%E7%BE%8E%E7%BB%84%E5%90%88%E5%AE%9E%E6%88%98%E6%8C%87%E5%8D%97/" rel="prev" title="打造属于你的云端实验室：VMware虚拟机与FinalShell完美组合实战指南">
+                  <i class="fa fa-angle-left"></i> 打造属于你的云端实验室：VMware虚拟机与FinalShell完美组合实战指南
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/02/28/VMware%E4%B8%AD%E5%AE%89%E8%A3%85CentOS%2010%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97/" rel="next" title="VMware中安装CentOS 10完整指南">
+                  VMware中安装CentOS 10完整指南 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">6017</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

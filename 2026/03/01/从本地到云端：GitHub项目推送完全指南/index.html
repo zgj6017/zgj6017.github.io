@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous" defer></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zgj6017.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="还记得我第一次把自己的代码推送到GitHub时的情景：打开了无数个网页，看了十几篇教程，却还是被各种错误提示搞得晕头转向。分支名称对不上、网络连接被重置、HTTPS和SSH傻傻分不清…如果你也正在经历这些，别担心，这篇文章将带你一步步走出迷雾。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从本地到云端：GitHub项目推送完全指南">
+<meta property="og:url" content="https://zgj6017.github.io/2026/03/01/%E4%BB%8E%E6%9C%AC%E5%9C%B0%E5%88%B0%E4%BA%91%E7%AB%AF%EF%BC%9AGitHub%E9%A1%B9%E7%9B%AE%E6%8E%A8%E9%80%81%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97/index.html">
+<meta property="og:site_name" content="6017">
+<meta property="og:description" content="还记得我第一次把自己的代码推送到GitHub时的情景：打开了无数个网页，看了十几篇教程，却还是被各种错误提示搞得晕头转向。分支名称对不上、网络连接被重置、HTTPS和SSH傻傻分不清…如果你也正在经历这些，别担心，这篇文章将带你一步步走出迷雾。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-03-01T09:12:47.797Z">
+<meta property="article:modified_time" content="2026-03-01T09:12:47.798Z">
+<meta property="article:author" content="6017">
+<meta property="article:tag" content="Git">
+<meta property="article:tag" content="GitHub">
+<meta property="article:tag" content="代码托管">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://zgj6017.github.io/2026/03/01/%E4%BB%8E%E6%9C%AC%E5%9C%B0%E5%88%B0%E4%BA%91%E7%AB%AF%EF%BC%9AGitHub%E9%A1%B9%E7%9B%AE%E6%8E%A8%E9%80%81%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zgj6017.github.io/2026/03/01/%E4%BB%8E%E6%9C%AC%E5%9C%B0%E5%88%B0%E4%BA%91%E7%AB%AF%EF%BC%9AGitHub%E9%A1%B9%E7%9B%AE%E6%8E%A8%E9%80%81%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97/","path":"2026/03/01/从本地到云端：GitHub项目推送完全指南/","title":"从本地到云端：GitHub项目推送完全指南"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>从本地到云端：GitHub项目推送完全指南 | 6017</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+  <script src="/js/third-party/pace.js" defer></script>
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">6017</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">记录学习与生活</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%B0%86%E9%A1%B9%E7%9B%AE%E6%8E%A8%E9%80%81%E5%88%B0GitHub%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">第一部分：为什么要将项目推送到GitHub？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%AE%89%E5%85%A8"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 版本控制与代码安全</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E5%8D%8F%E4%BD%9C%E5%BC%80%E5%8F%91%E7%9A%84%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 协作开发的基础设施</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E5%B1%95%E7%A4%BA%E4%BD%9C%E5%93%81%E4%B8%8E%E6%8A%80%E6%9C%AF%E6%88%90%E9%95%BF"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 展示作品与技术成长</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90-%E9%83%A8%E7%BD%B2%E7%9A%84%E5%9F%BA%E7%A1%80"><span class="nav-number">1.4.</span> <span class="nav-text">1.4 持续集成&#x2F;部署的基础</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86%EF%BC%9A%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C%E2%80%94%E2%80%94%E6%B3%A8%E5%86%8CGitHub%E8%B4%A6%E5%8F%B7"><span class="nav-number">2.</span> <span class="nav-text">第二部分：准备工作——注册GitHub账号</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E6%B3%A8%E5%86%8CGitHub%E8%B4%A6%E5%8F%B7-%E8%AF%A6%E6%83%85%E8%A7%81%E5%88%9B%E5%BB%BA%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AAGitHub%E8%B4%A6%E5%8F%B7"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 注册GitHub账号(详情见创建你的第一个GitHub账号)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E9%83%A8%E5%88%86%EF%BC%9A%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AEGit%E7%8E%AF%E5%A2%83"><span class="nav-number">3.</span> <span class="nav-text">第三部分：安装和配置Git环境</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E5%AE%89%E8%A3%85Git"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 安装Git</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E9%AA%8C%E8%AF%81Git%E5%AE%89%E8%A3%85%E6%88%90%E5%8A%9F"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 验证Git安装成功</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E9%85%8D%E7%BD%AEGit%E8%BA%AB%E4%BB%BD%EF%BC%88%E5%85%B3%E9%94%AE%E6%AD%A5%E9%AA%A4%EF%BC%89"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 配置Git身份（关键步骤）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%EF%BC%9A%E5%88%9B%E5%BB%BAGitHub%E4%BB%93%E5%BA%93"><span class="nav-number">4.</span> <span class="nav-text">第四部分：创建GitHub仓库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E6%96%B0%E5%BB%BA%E4%BB%93%E5%BA%93%E6%AD%A5%E9%AA%A4"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 新建仓库步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E7%90%86%E8%A7%A3%E5%88%9B%E5%BB%BA%E5%90%8E%E7%9A%84%E9%A1%B5%E9%9D%A2"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 理解创建后的页面</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%94%E9%83%A8%E5%88%86%EF%BC%9A%E9%85%8D%E7%BD%AESSH%E5%AE%9E%E7%8E%B0%E7%A8%B3%E5%AE%9A%E8%BF%9E%E6%8E%A5%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="nav-number">5.</span> <span class="nav-text">第五部分：配置SSH实现稳定连接（推荐）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%8E%A8%E8%8D%90SSH%EF%BC%9F"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 为什么推荐SSH？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E6%A3%80%E6%9F%A5%E6%98%AF%E5%90%A6%E5%B7%B2%E6%9C%89SSH%E5%AF%86%E9%92%A5"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 检查是否已有SSH密钥</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E7%94%9F%E6%88%90%E6%96%B0%E7%9A%84SSH%E5%AF%86%E9%92%A5%EF%BC%88%E5%A6%82%E6%9E%9C%E6%B2%A1%E6%9C%89%EF%BC%89"><span class="nav-number">5.3.</span> <span class="nav-text">5.3 生成新的SSH密钥（如果没有）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-%E5%A4%8D%E5%88%B6%E5%85%AC%E9%92%A5%E5%88%B0%E5%89%AA%E8%B4%B4%E6%9D%BF"><span class="nav-number">5.4.</span> <span class="nav-text">5.4 复制公钥到剪贴板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-5-%E6%B7%BB%E5%8A%A0%E5%88%B0GitHub%E8%B4%A6%E6%88%B7"><span class="nav-number">5.5.</span> <span class="nav-text">5.5 添加到GitHub账户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-6-%E6%B5%8B%E8%AF%95SSH%E8%BF%9E%E6%8E%A5"><span class="nav-number">5.6.</span> <span class="nav-text">5.6 测试SSH连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-7-%E9%85%8D%E7%BD%AESSH%E4%BD%BF%E7%94%A8443%E7%AB%AF%E5%8F%A3%EF%BC%88%E7%BB%95%E8%BF%87%E9%98%B2%E7%81%AB%E5%A2%99%EF%BC%89"><span class="nav-number">5.7.</span> <span class="nav-text">5.7 配置SSH使用443端口（绕过防火墙）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E5%85%AD%E9%83%A8%E5%88%86%EF%BC%9A%E5%B0%86%E6%9C%AC%E5%9C%B0%E9%A1%B9%E7%9B%AE%E6%8E%A8%E9%80%81%E5%88%B0GitHub"><span class="nav-number">6.</span> <span class="nav-text">第六部分：将本地项目推送到GitHub</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-%E8%BF%9B%E5%85%A5%E9%A1%B9%E7%9B%AE%E7%9B%AE%E5%BD%95"><span class="nav-number">6.1.</span> <span class="nav-text">6.1 进入项目目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-%E5%88%9D%E5%A7%8B%E5%8C%96Git%E4%BB%93%E5%BA%93%EF%BC%88%E5%A6%82%E6%9E%9C%E8%BF%98%E6%B2%A1%E5%88%9D%E5%A7%8B%E5%8C%96%EF%BC%89"><span class="nav-number">6.2.</span> <span class="nav-text">6.2 初始化Git仓库（如果还没初始化）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-%E5%88%9B%E5%BB%BA-gitignore%E6%96%87%E4%BB%B6%EF%BC%88%E5%8F%AF%E9%80%89%E4%BD%86%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="nav-number">6.3.</span> <span class="nav-text">6.3 创建.gitignore文件（可选但推荐）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4-%E6%B7%BB%E5%8A%A0%E6%96%87%E4%BB%B6%E5%88%B0%E6%9A%82%E5%AD%98%E5%8C%BA"><span class="nav-number">6.4.</span> <span class="nav-text">6.4 添加文件到暂存区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-5-%E9%A6%96%E6%AC%A1%E6%8F%90%E4%BA%A4"><span class="nav-number">6.5.</span> <span class="nav-text">6.5 首次提交</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-6-%E6%B7%BB%E5%8A%A0%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%E5%9C%B0%E5%9D%80"><span class="nav-number">6.6.</span> <span class="nav-text">6.6 添加远程仓库地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-7-%E6%9F%A5%E7%9C%8B%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%E9%85%8D%E7%BD%AE"><span class="nav-number">6.7.</span> <span class="nav-text">6.7 查看远程仓库配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-8-%E6%8E%A8%E9%80%81%E5%88%B0GitHub"><span class="nav-number">6.8.</span> <span class="nav-text">6.8 推送到GitHub</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%83%E9%83%A8%E5%88%86%EF%BC%9A%E5%AE%9E%E6%88%98%E4%B8%AD%E7%9A%84%E9%97%AE%E9%A2%98%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">7.</span> <span class="nav-text">第七部分：实战中的问题与解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-%E9%97%AE%E9%A2%98%E4%B8%80%EF%BC%9A%E5%88%86%E6%94%AF%E5%90%8D%E7%A7%B0%E4%B8%8D%E5%8C%B9%E9%85%8D"><span class="nav-number">7.1.</span> <span class="nav-text">7.1 问题一：分支名称不匹配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-%E9%97%AE%E9%A2%98%E4%BA%8C%EF%BC%9AHTTPS%E8%BF%9E%E6%8E%A5%E8%A2%AB%E9%87%8D%E7%BD%AE"><span class="nav-number">7.2.</span> <span class="nav-text">7.2 问题二：HTTPS连接被重置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3-%E9%97%AE%E9%A2%98%E4%B8%89%EF%BC%9A%E6%9D%83%E9%99%90%E8%A2%AB%E6%8B%92%E7%BB%9D"><span class="nav-number">7.3.</span> <span class="nav-text">7.3 问题三：权限被拒绝</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-4-%E9%97%AE%E9%A2%98%E5%9B%9B%EF%BC%9A%E8%BF%9C%E7%A8%8B%E6%9C%89%E6%9B%B4%E6%96%B0%E5%AF%BC%E8%87%B4%E6%8E%A8%E9%80%81%E5%A4%B1%E8%B4%A5"><span class="nav-number">7.4.</span> <span class="nav-text">7.4 问题四：远程有更新导致推送失败</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E5%85%AB%E9%83%A8%E5%88%86%EF%BC%9A%E6%97%A5%E5%B8%B8%E4%BD%BF%E7%94%A8%E5%91%BD%E4%BB%A4%E8%AF%A6%E8%A7%A3"><span class="nav-number">8.</span> <span class="nav-text">第八部分：日常使用命令详解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="nav-number">8.1.</span> <span class="nav-text">8.1 基本工作流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-%E5%AE%9E%E7%94%A8%E5%91%BD%E4%BB%A4%E9%9B%86%E5%90%88"><span class="nav-number">8.2.</span> <span class="nav-text">8.2 实用命令集合</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B9%9D%E9%83%A8%E5%88%86%EF%BC%9A%E8%BF%9B%E9%98%B6%E6%8A%80%E5%B7%A7%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="nav-number">9.</span> <span class="nav-text">第九部分：进阶技巧与最佳实践</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#9-1-%E7%BC%96%E5%86%99%E8%89%AF%E5%A5%BD%E7%9A%84%E6%8F%90%E4%BA%A4%E4%BF%A1%E6%81%AF"><span class="nav-number">9.1.</span> <span class="nav-text">9.1 编写良好的提交信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-2-%E5%88%86%E6%94%AF%E7%AE%A1%E7%90%86%E7%AD%96%E7%95%A5"><span class="nav-number">9.2.</span> <span class="nav-text">9.2 分支管理策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-3-%E4%BF%9D%E6%8A%A4%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF"><span class="nav-number">9.3.</span> <span class="nav-text">9.3 保护敏感信息</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E5%8D%81%E9%83%A8%E5%88%86%EF%BC%9A%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E9%80%9F%E6%9F%A5%E8%A1%A8"><span class="nav-number">10.</span> <span class="nav-text">第十部分：常见问题速查表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD%EF%BC%9A%E4%BB%8E%E4%BB%8A%E5%A4%A9%E5%BC%80%E5%A7%8B%E4%BD%BF%E7%94%A8GitHub"><span class="nav-number">11.</span> <span class="nav-text">结语：从今天开始使用GitHub</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%9C%85-%E4%BD%A0%E5%B7%B2%E7%BB%8F%E5%AE%8C%E6%88%90"><span class="nav-number">11.1.</span> <span class="nav-text">✅ 你已经完成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%F0%9F%93%9A-%E4%B8%8B%E4%B8%80%E6%AD%A5%E5%8F%AF%E4%BB%A5%E5%AD%A6%E4%B9%A0"><span class="nav-number">11.2.</span> <span class="nav-text">📚 下一步可以学习</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%F0%9F%92%A1-%E8%AE%B0%E4%BD%8F%E8%BF%99%E5%87%A0%E7%82%B9"><span class="nav-number">11.3.</span> <span class="nav-text">💡 记住这几点</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="6017"
+      src="https://github.com/zgj6017.png">
+  <p class="site-author-name" itemprop="name">6017</p>
+  <div class="site-description" itemprop="description">在白云看了《硅谷之火》这本书后，想成为雷布斯的小佬</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zgj6017" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zgj6017" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zgj6017.github.io/2026/03/01/%E4%BB%8E%E6%9C%AC%E5%9C%B0%E5%88%B0%E4%BA%91%E7%AB%AF%EF%BC%9AGitHub%E9%A1%B9%E7%9B%AE%E6%8E%A8%E9%80%81%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://github.com/zgj6017.png">
+      <meta itemprop="name" content="6017">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="6017">
+      <meta itemprop="description" content="在白云看了《硅谷之火》这本书后，想成为雷布斯的小佬">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="从本地到云端：GitHub项目推送完全指南 | 6017">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          从本地到云端：GitHub项目推送完全指南
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-03-01 17:12:47" itemprop="dateCreated datePublished" datetime="2026-03-01T17:12:47+08:00">2026-03-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" itemprop="url" rel="index"><span itemprop="name">技术文档</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>还记得我第一次把自己的代码推送到GitHub时的情景：打开了无数个网页，看了十几篇教程，却还是被各种错误提示搞得晕头转向。分支名称对不上、网络连接被重置、HTTPS和SSH傻傻分不清…如果你也正在经历这些，别担心，这篇文章将带你一步步走出迷雾。</p>
+<span id="more"></span>
+
+<h2 id="第一部分：为什么要将项目推送到GitHub？"><a href="#第一部分：为什么要将项目推送到GitHub？" class="headerlink" title="第一部分：为什么要将项目推送到GitHub？"></a>第一部分：为什么要将项目推送到GitHub？</h2><p>在开始操作之前，我们先要明白：为什么我们需要把本地的代码放到GitHub上？</p>
+<h3 id="1-1-版本控制与代码安全"><a href="#1-1-版本控制与代码安全" class="headerlink" title="1.1 版本控制与代码安全"></a>1.1 版本控制与代码安全</h3><p>想象一下这个场景：你熬夜写了一个星期的项目，突然电脑蓝屏了，或者硬盘坏了，所有代码付诸东流… GitHub就像是代码的”云端保险箱”：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 每一次推送都是一次备份</span><br><span class="line">git push origin main</span><br><span class="line"># 你的代码安全地存储在云端服务器</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="1-2-协作开发的基础设施"><a href="#1-2-协作开发的基础设施" class="headerlink" title="1.2 协作开发的基础设施"></a>1.2 协作开发的基础设施</h3><p>当多人合作时，GitHub提供了完善的协作机制：</p>
+<ul>
+<li><strong>代码审查</strong>：团队成员可以查看你的代码并提出修改建议</li>
+<li><strong>问题追踪</strong>：内置的Issues系统管理bug和功能需求</li>
+<li><strong>项目管理</strong>：Projects看板让团队进度一目了然</li>
+</ul>
+<h3 id="1-3-展示作品与技术成长"><a href="#1-3-展示作品与技术成长" class="headerlink" title="1.3 展示作品与技术成长"></a>1.3 展示作品与技术成长</h3><ul>
+<li><strong>技术简历的亮点</strong>：企业招聘时越来越看重GitHub活跃度</li>
+<li><strong>开源贡献的起点</strong>：可以参与他人项目，也可以让别人参与你的项目</li>
+<li><strong>学习进步的记录</strong>：见证自己代码质量的提升过程</li>
+</ul>
+<h3 id="1-4-持续集成-部署的基础"><a href="#1-4-持续集成-部署的基础" class="headerlink" title="1.4 持续集成&#x2F;部署的基础"></a>1.4 持续集成&#x2F;部署的基础</h3><p>现代开发流程中，GitHub常作为CI&#x2F;CD的起点：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># .github/workflows/deploy.yml示例</span><br><span class="line">on:</span><br><span class="line">  push:</span><br><span class="line">    branches: [main]  # 推送到main分支自动部署</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="第二部分：准备工作——注册GitHub账号"><a href="#第二部分：准备工作——注册GitHub账号" class="headerlink" title="第二部分：准备工作——注册GitHub账号"></a>第二部分：准备工作——注册GitHub账号</h2><h3 id="2-1-注册GitHub账号-详情见创建你的第一个GitHub账号"><a href="#2-1-注册GitHub账号-详情见创建你的第一个GitHub账号" class="headerlink" title="2.1 注册GitHub账号(详情见创建你的第一个GitHub账号)"></a>2.1 注册GitHub账号(详情见<a href="https://zgj6017.github.io/2026/02/25/%E5%88%9B%E5%BB%BA%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AAGitHub%E8%B4%A6%E5%8F%B7/%EF%BC%89">创建你的第一个GitHub账号</a>)</h3><p>在开始任何Git操作之前，首先需要有一个GitHub账号：</p>
+<ol>
+<li>访问 <a target="_blank" rel="noopener" href="https://github.com/">github.com</a></li>
+<li>点击右上角的 <strong>“Sign up”</strong> 按钮</li>
+<li>填写注册信息：<ul>
+<li><strong>Enter your email</strong>：输入你的邮箱地址</li>
+<li><strong>Create a password</strong>：设置密码（至少包含15个字符或8个字符+数字+小写字母）</li>
+<li><strong>Enter a username</strong>：选择一个用户名（这将出现在你的仓库地址中，如 <code>github.com/你的用户名</code>）</li>
+<li><strong>Email preferences</strong>：选择是否接收更新邮件（可选）</li>
+</ul>
+</li>
+<li>完成人机验证（拼图验证）</li>
+<li>点击 <strong>“Create account”</strong></li>
+<li>去邮箱查收验证邮件，点击验证链接完成注册</li>
+</ol>
+<p><strong>小提示</strong>：用户名一旦确定，虽然可以修改，但会影响所有仓库地址，建议谨慎选择。</p>
+<h2 id="第三部分：安装和配置Git环境"><a href="#第三部分：安装和配置Git环境" class="headerlink" title="第三部分：安装和配置Git环境"></a>第三部分：安装和配置Git环境</h2><h3 id="3-1-安装Git"><a href="#3-1-安装Git" class="headerlink" title="3.1 安装Git"></a>3.1 安装Git</h3><p>有了GitHub账号后，现在需要在你的电脑上安装Git：</p>
+<p><strong>Windows用户</strong>：</p>
+<ol>
+<li>访问 <a target="_blank" rel="noopener" href="https://git-scm.com/">git-scm.com</a> 下载安装包</li>
+<li>一直点”下一步”，使用默认配置即可</li>
+<li>安装完成后，在开始菜单找到 <strong>“Git Bash”</strong>（这是Windows下的Git命令行工具）</li>
+</ol>
+<p><strong>macOS用户</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 使用Homebrew安装（推荐）</span><br><span class="line">brew install git</span><br><span class="line"></span><br><span class="line"># 或通过Xcode Command Line Tools</span><br><span class="line">xcode-select --install</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>Linux用户</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># Ubuntu/Debian</span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install git</span><br><span class="line"></span><br><span class="line"># CentOS/RHEL</span><br><span class="line">sudo yum install git</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-2-验证Git安装成功"><a href="#3-2-验证Git安装成功" class="headerlink" title="3.2 验证Git安装成功"></a>3.2 验证Git安装成功</h3><p>打开终端（Windows用户打开Git Bash），输入：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git --version</span><br><span class="line"># 应该显示类似：git version 2.x.x</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-3-配置Git身份（关键步骤）"><a href="#3-3-配置Git身份（关键步骤）" class="headerlink" title="3.3 配置Git身份（关键步骤）"></a>3.3 配置Git身份（关键步骤）</h3><p>这是<strong>连接本地Git和GitHub账号</strong>的重要一步。配置的用户名和邮箱会被记录在你每一次的提交中。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 配置用户名（使用你的GitHub用户名，确保一致）</span><br><span class="line">git config --global user.name &quot;你的GitHub用户名&quot;</span><br><span class="line"></span><br><span class="line"># 配置邮箱（必须使用注册GitHub时用的邮箱）</span><br><span class="line">git config --global user.email &quot;your.email@example.com&quot;</span><br><span class="line"></span><br><span class="line"># 查看配置是否成功</span><br><span class="line">git config --global --list</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>为什么这一步很重要？</strong></p>
+<ul>
+<li>GitHub通过邮箱来关联你的提交记录</li>
+<li>如果邮箱不匹配，你的提交会显示为”未知用户”</li>
+<li>正确配置后，你的提交会显示GitHub头像和用户名</li>
+</ul>
+<h2 id="第四部分：创建GitHub仓库"><a href="#第四部分：创建GitHub仓库" class="headerlink" title="第四部分：创建GitHub仓库"></a>第四部分：创建GitHub仓库</h2><h3 id="4-1-新建仓库步骤"><a href="#4-1-新建仓库步骤" class="headerlink" title="4.1 新建仓库步骤"></a>4.1 新建仓库步骤</h3><ol>
+<li>登录GitHub，点击右上角 <strong>“+”</strong> 号 → <strong>“New repository”</strong></li>
+<li>填写仓库信息（如图所示）：<ul>
+<li><strong>Repository name</strong>：仓库名称（建议和本地项目同名，如 <code>3D-Christmas-Tree</code>）</li>
+<li><strong>Description</strong>：仓库描述（可选，如 “一个使用Three.js的3D圣诞树”）</li>
+<li><strong>Public&#x2F;Private</strong>：选择公开或私有<ul>
+<li>Public：任何人都能看到，适合开源项目</li>
+<li>Private：只有你和 collaborators 能看到</li>
+</ul>
+</li>
+<li><strong>重要：不要勾选</strong> “Initialize this repository with a README”<ul>
+<li>因为我们已经有本地项目，如果勾选会产生冲突</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>点击 <strong>“Create repository”</strong></li>
+</ol>
+<h3 id="4-2-理解创建后的页面"><a href="#4-2-理解创建后的页面" class="headerlink" title="4.2 理解创建后的页面"></a>4.2 理解创建后的页面</h3><p>创建成功后，GitHub会显示一个包含命令的页面，这里提供了两种连接方式：</p>
+<p><strong>HTTPS方式</strong>（简单但可能不稳定）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/用户名/仓库名.git</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>SSH方式</strong>（推荐，更稳定）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git@github.com:用户名/仓库名.git</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="第五部分：配置SSH实现稳定连接（推荐）"><a href="#第五部分：配置SSH实现稳定连接（推荐）" class="headerlink" title="第五部分：配置SSH实现稳定连接（推荐）"></a>第五部分：配置SSH实现稳定连接（推荐）</h2><h3 id="5-1-为什么推荐SSH？"><a href="#5-1-为什么推荐SSH？" class="headerlink" title="5.1 为什么推荐SSH？"></a>5.1 为什么推荐SSH？</h3><table>
+<thead>
+<tr>
+<th align="left">方面</th>
+<th align="left">HTTPS</th>
+<th align="left">SSH</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>认证方式</strong></td>
+<td align="left">用户名 + Token</td>
+<td align="left">公钥&#x2F;私钥对</td>
+</tr>
+<tr>
+<td align="left"><strong>使用体验</strong></td>
+<td align="left">每次可能需要输入凭证</td>
+<td align="left">一次配置永久使用</td>
+</tr>
+<tr>
+<td align="left"><strong>网络稳定性</strong></td>
+<td align="left">易被干扰</td>
+<td align="left">相对稳定</td>
+</tr>
+<tr>
+<td align="left"><strong>安全性</strong></td>
+<td align="left">依赖密码强度</td>
+<td align="left">基于非对称加密</td>
+</tr>
+</tbody></table>
+<h3 id="5-2-检查是否已有SSH密钥"><a href="#5-2-检查是否已有SSH密钥" class="headerlink" title="5.2 检查是否已有SSH密钥"></a>5.2 检查是否已有SSH密钥</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 查看.ssh文件夹（Windows Git Bash / Mac / Linux）</span><br><span class="line">ls -la ~/.ssh/</span><br><span class="line"># 如果看到 id_ed25519.pub 或 id_rsa.pub 说明已有密钥</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="5-3-生成新的SSH密钥（如果没有）"><a href="#5-3-生成新的SSH密钥（如果没有）" class="headerlink" title="5.3 生成新的SSH密钥（如果没有）"></a>5.3 生成新的SSH密钥（如果没有）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 使用注册GitHub的邮箱作为标签</span><br><span class="line">ssh-keygen -t ed25519 -C &quot;your_email@example.com&quot;</span><br><span class="line"></span><br><span class="line"># 如果系统不支持ED25519，改用RSA</span><br><span class="line">ssh-keygen -t rsa -b 4096 -C &quot;your_email@example.com&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>你会看到：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Generating public/private ed25519 key pair.</span><br><span class="line">Enter file in which to save the key (/c/Users/你的用户名/.ssh/id_ed25519):</span><br><span class="line"># 直接按回车，使用默认位置</span><br><span class="line"></span><br><span class="line">Enter passphrase (empty for no passphrase):</span><br><span class="line"># 可选：设置密码（每次使用SSH时需要输入，增加安全性）</span><br><span class="line"># 直接按回车表示不设置</span><br><span class="line"></span><br><span class="line">Enter same passphrase again:</span><br><span class="line"># 再次按回车</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="5-4-复制公钥到剪贴板"><a href="#5-4-复制公钥到剪贴板" class="headerlink" title="5.4 复制公钥到剪贴板"></a>5.4 复制公钥到剪贴板</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># Windows PowerShell</span><br><span class="line">Get-Content ~/.ssh/id_ed25519.pub | Set-Clipboard</span><br><span class="line"></span><br><span class="line"># Windows Git Bash</span><br><span class="line">cat ~/.ssh/id_ed25519.pub | clip</span><br><span class="line"></span><br><span class="line"># macOS</span><br><span class="line">pbcopy &lt; ~/.ssh/id_ed25519.pub</span><br><span class="line"></span><br><span class="line"># Linux</span><br><span class="line">xclip -selection clipboard &lt; ~/.ssh/id_ed25519.pub</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="5-5-添加到GitHub账户"><a href="#5-5-添加到GitHub账户" class="headerlink" title="5.5 添加到GitHub账户"></a>5.5 添加到GitHub账户</h3><ol>
+<li>登录GitHub，点击右上角头像 → <strong>Settings</strong></li>
+<li>左侧边栏选择 <strong>“SSH and GPG keys”</strong></li>
+<li>点击绿色按钮 <strong>“New SSH key”</strong></li>
+<li><strong>Title</strong>：填写一个描述性名称（如 “我的办公电脑”、”MacBook Pro”等）</li>
+<li><strong>Key type</strong>：保持默认的 “Authentication Key”</li>
+<li><strong>Key</strong>：粘贴你刚才复制的公钥内容（以 <code>ssh-ed25519</code> 或 <code>ssh-rsa</code> 开头）</li>
+<li>点击 <strong>“Add SSH key”</strong></li>
+<li>如有提示，输入GitHub密码确认</li>
+</ol>
+<h3 id="5-6-测试SSH连接"><a href="#5-6-测试SSH连接" class="headerlink" title="5.6 测试SSH连接"></a>5.6 测试SSH连接</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
+
+
+
+<p>成功会看到：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hi 你的用户名! You&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
+
+
+
+<p>如果看到警告 <code>The authenticity of host &#39;github.com&#39; can&#39;t be established.</code>，输入 <code>yes</code> 继续。</p>
+<h3 id="5-7-配置SSH使用443端口（绕过防火墙）"><a href="#5-7-配置SSH使用443端口（绕过防火墙）" class="headerlink" title="5.7 配置SSH使用443端口（绕过防火墙）"></a>5.7 配置SSH使用443端口（绕过防火墙）</h3><p>如果你在公司网络或防火墙后，SSH的22端口可能被封锁，可以配置使用443端口：</p>
+<p>创建或编辑 <code>~/.ssh/config</code> 文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Windows (Git Bash)</span><br><span class="line">notepad ~/.ssh/config</span><br><span class="line"></span><br><span class="line"># Mac/Linux</span><br><span class="line">nano ~/.ssh/config</span><br></pre></td></tr></table></figure>
+
+
+
+<p>添加以下内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Host github.com</span><br><span class="line">    HostName ssh.github.com</span><br><span class="line">    Port 443</span><br><span class="line">    User git</span><br></pre></td></tr></table></figure>
+
+
+
+<p>保存后再次测试连接：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -T git@github.com</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="第六部分：将本地项目推送到GitHub"><a href="#第六部分：将本地项目推送到GitHub" class="headerlink" title="第六部分：将本地项目推送到GitHub"></a>第六部分：将本地项目推送到GitHub</h2><h3 id="6-1-进入项目目录"><a href="#6-1-进入项目目录" class="headerlink" title="6.1 进入项目目录"></a>6.1 进入项目目录</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># Windows</span><br><span class="line">cd D:\Homework\3D-Christmas-Tree</span><br><span class="line"># （D:\Homework\3D-Christmas-Tree）替换成你项目的地址</span><br><span class="line"></span><br><span class="line"># Mac/Linux</span><br><span class="line">cd /home/username/projects/3D-Christmas-Tree</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="6-2-初始化Git仓库（如果还没初始化）"><a href="#6-2-初始化Git仓库（如果还没初始化）" class="headerlink" title="6.2 初始化Git仓库（如果还没初始化）"></a>6.2 初始化Git仓库（如果还没初始化）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 在当前目录初始化Git</span><br><span class="line">git init</span><br><span class="line"></span><br><span class="line"># 查看Git状态（会显示未跟踪的文件）</span><br><span class="line">git status</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="6-3-创建-gitignore文件（可选但推荐）"><a href="#6-3-创建-gitignore文件（可选但推荐）" class="headerlink" title="6.3 创建.gitignore文件（可选但推荐）"></a>6.3 创建.gitignore文件（可选但推荐）</h3><p>创建一个 <code>.gitignore</code> 文件，告诉Git哪些文件不需要跟踪：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 使用记事本创建（Windows）</span><br><span class="line">notepad .gitignore</span><br></pre></td></tr></table></figure>
+
+
+
+<p>常见内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># 依赖文件夹</span><br><span class="line">node_modules/</span><br><span class="line">vendor/</span><br><span class="line"></span><br><span class="line"># 环境配置</span><br><span class="line">.env</span><br><span class="line">.env.local</span><br><span class="line"></span><br><span class="line"># 编译文件</span><br><span class="line">dist/</span><br><span class="line">build/</span><br><span class="line">*.pyc</span><br><span class="line"></span><br><span class="line"># IDE配置</span><br><span class="line">.vscode/</span><br><span class="line">.idea/</span><br><span class="line"></span><br><span class="line"># 系统文件</span><br><span class="line">.DS_Store</span><br><span class="line">Thumbs.db</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="6-4-添加文件到暂存区"><a href="#6-4-添加文件到暂存区" class="headerlink" title="6.4 添加文件到暂存区"></a>6.4 添加文件到暂存区</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 添加所有文件</span><br><span class="line">git add .</span><br><span class="line"></span><br><span class="line"># 或者只添加特定文件</span><br><span class="line">git add index.html style.css README.md</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="6-5-首次提交"><a href="#6-5-首次提交" class="headerlink" title="6.5 首次提交"></a>6.5 首次提交</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 提交文件到本地仓库</span><br><span class="line">git commit -m &quot;Initial commit: 首次提交项目&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>好的提交信息示例：</p>
+<ul>
+<li><code>git commit -m &quot;feat: 添加3D圣诞树核心功能&quot;</code></li>
+<li><code>git commit -m &quot;docs: 更新README文档&quot;</code></li>
+<li><code>git commit -m &quot;fix: 修复移动端显示问题&quot;</code></li>
+</ul>
+<h3 id="6-6-添加远程仓库地址"><a href="#6-6-添加远程仓库地址" class="headerlink" title="6.6 添加远程仓库地址"></a>6.6 添加远程仓库地址</h3><p><strong>使用SSH方式（推荐）</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote add origin git@github.com:你的用户名/3D-Christmas-Tree.git</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>或使用HTTPS方式</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote add origin https://github.com/你的用户名/3D-Christmas-Tree.git</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="6-7-查看远程仓库配置"><a href="#6-7-查看远程仓库配置" class="headerlink" title="6.7 查看远程仓库配置"></a>6.7 查看远程仓库配置</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git remote -v</span><br><span class="line"># 应该显示fetch和push两个地址</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="6-8-推送到GitHub"><a href="#6-8-推送到GitHub" class="headerlink" title="6.8 推送到GitHub"></a>6.8 推送到GitHub</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 首次推送需要加 -u 参数建立关联</span><br><span class="line">git push -u origin master</span><br></pre></td></tr></table></figure>
+
+
+
+<p>如果显示成功，会看到类似：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Enumerating objects: 15, done.</span><br><span class="line">Counting objects: 100% (15/15), done.</span><br><span class="line">Delta compression using up to 8 threads</span><br><span class="line">Compressing objects: 100% (12/12), done.</span><br><span class="line">Writing objects: 100% (15/15), 2.5 MiB | 1.2 MiB/s, done.</span><br><span class="line">Total 15 (delta 2), reused 0 (delta 0)</span><br><span class="line">To github.com:用户名/3D-Christmas-Tree.git</span><br><span class="line"> * [new branch]      master -&gt; master</span><br><span class="line">Branch &#x27;master&#x27; set up to track remote branch &#x27;master&#x27; from &#x27;origin&#x27;.</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="第七部分：实战中的问题与解决方案"><a href="#第七部分：实战中的问题与解决方案" class="headerlink" title="第七部分：实战中的问题与解决方案"></a>第七部分：实战中的问题与解决方案</h2><h3 id="7-1-问题一：分支名称不匹配"><a href="#7-1-问题一：分支名称不匹配" class="headerlink" title="7.1 问题一：分支名称不匹配"></a>7.1 问题一：分支名称不匹配</h3><p><strong>错误信息</strong>： </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">error: src refspec main does not match any</span><br><span class="line">error: failed to push some refs to &#x27;https://github.com/...&#x27;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>原因分析</strong>：</p>
+<ul>
+<li>本地分支是 <code>master</code>（<code>git init</code>默认创建）</li>
+<li>远程期望的是 <code>main</code>（GitHub 2020年后新仓库默认）</li>
+</ul>
+<p><strong>解决方案</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 方案1：使用本地实际分支名</span><br><span class="line">git push -u origin master</span><br><span class="line"></span><br><span class="line"># 方案2：查看当前分支名</span><br><span class="line">git branch</span><br><span class="line"># 输出结果带*的就是当前分支</span><br><span class="line"></span><br><span class="line"># 方案3：重命名本地分支为main</span><br><span class="line">git branch -m master main</span><br><span class="line">git push -u origin main</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="7-2-问题二：HTTPS连接被重置"><a href="#7-2-问题二：HTTPS连接被重置" class="headerlink" title="7.2 问题二：HTTPS连接被重置"></a>7.2 问题二：HTTPS连接被重置</h3><p><strong>错误信息</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fatal: unable to access &#x27;...&#x27;: Recv failure: Connection was reset</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>排查步骤</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 1. 检查Git代理设置</span><br><span class="line">git config --global --list | findstr proxy</span><br><span class="line"></span><br><span class="line"># 2. 如果没有代理，问题出在网络环境</span><br><span class="line"># 3. 解决方案：切换到SSH协议</span><br><span class="line">git remote set-url origin git@github.com:用户名/仓库名.git</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="7-3-问题三：权限被拒绝"><a href="#7-3-问题三：权限被拒绝" class="headerlink" title="7.3 问题三：权限被拒绝"></a>7.3 问题三：权限被拒绝</h3><p><strong>错误信息</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ERROR: Permission to user/repo.git denied to user</span><br><span class="line">fatal: Could not read from remote repository.</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>解决方案</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 1. 检查远程地址是否正确</span><br><span class="line">git remote -v</span><br><span class="line"></span><br><span class="line"># 2. 检查SSH密钥是否添加到GitHub</span><br><span class="line">ssh -T git@github.com</span><br><span class="line"></span><br><span class="line"># 3. 如果使用HTTPS，需要生成Personal Access Token</span><br><span class="line"># GitHub Settings → Developer settings → Personal access tokens</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="7-4-问题四：远程有更新导致推送失败"><a href="#7-4-问题四：远程有更新导致推送失败" class="headerlink" title="7.4 问题四：远程有更新导致推送失败"></a>7.4 问题四：远程有更新导致推送失败</h3><p><strong>错误信息</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">! [rejected]        master -&gt; master (fetch first)</span><br><span class="line">error: failed to push some refs to &#x27;...&#x27;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>解决方案</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 1. 先拉取远程更新</span><br><span class="line">git pull origin master</span><br><span class="line"></span><br><span class="line"># 2. 如果有冲突，解决冲突后</span><br><span class="line">git add .</span><br><span class="line">git commit -m &quot;解决合并冲突&quot;</span><br><span class="line"></span><br><span class="line"># 3. 再次推送</span><br><span class="line">git push origin master</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="第八部分：日常使用命令详解"><a href="#第八部分：日常使用命令详解" class="headerlink" title="第八部分：日常使用命令详解"></a>第八部分：日常使用命令详解</h2><h3 id="8-1-基本工作流程"><a href="#8-1-基本工作流程" class="headerlink" title="8.1 基本工作流程"></a>8.1 基本工作流程</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># 1. 查看当前状态（最常用命令）</span><br><span class="line">git status</span><br><span class="line"></span><br><span class="line"># 2. 添加修改的文件</span><br><span class="line">git add 文件名        # 添加特定文件</span><br><span class="line">git add .            # 添加所有修改</span><br><span class="line"></span><br><span class="line"># 3. 提交修改</span><br><span class="line">git commit -m &quot;清晰的提交说明&quot;</span><br><span class="line"></span><br><span class="line"># 4. 拉取远程更新（养成习惯，推送前先拉取）</span><br><span class="line">git pull origin master</span><br><span class="line"></span><br><span class="line"># 5. 推送本地提交</span><br><span class="line">git push origin master</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="8-2-实用命令集合"><a href="#8-2-实用命令集合" class="headerlink" title="8.2 实用命令集合"></a>8.2 实用命令集合</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"># 查看提交历史（简洁版）</span><br><span class="line">git log --oneline</span><br><span class="line"></span><br><span class="line"># 查看所有分支（包括远程）</span><br><span class="line">git branch -a</span><br><span class="line"></span><br><span class="line"># 创建并切换分支</span><br><span class="line">git checkout -b feature-login</span><br><span class="line"></span><br><span class="line"># 切换分支</span><br><span class="line">git checkout master</span><br><span class="line"></span><br><span class="line"># 合并分支</span><br><span class="line">git merge feature-login</span><br><span class="line"></span><br><span class="line"># 查看文件修改内容</span><br><span class="line">git diff 文件名</span><br><span class="line"></span><br><span class="line"># 撤销工作区的修改</span><br><span class="line">git checkout -- 文件名</span><br><span class="line"></span><br><span class="line"># 撤销暂存区的修改</span><br><span class="line">git reset HEAD 文件名</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="第九部分：进阶技巧与最佳实践"><a href="#第九部分：进阶技巧与最佳实践" class="headerlink" title="第九部分：进阶技巧与最佳实践"></a>第九部分：进阶技巧与最佳实践</h2><h3 id="9-1-编写良好的提交信息"><a href="#9-1-编写良好的提交信息" class="headerlink" title="9.1 编写良好的提交信息"></a>9.1 编写良好的提交信息</h3><p><strong>好的提交信息格式</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;类型&gt;(&lt;范围&gt;): &lt;简短描述&gt;</span><br><span class="line"></span><br><span class="line">&lt;详细描述&gt;</span><br><span class="line"></span><br><span class="line">&lt;关联Issue&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>类型说明</strong>：</p>
+<ul>
+<li><code>feat</code>: 新功能</li>
+<li><code>fix</code>: 修复bug</li>
+<li><code>docs</code>: 文档更新</li>
+<li><code>style</code>: 代码格式调整</li>
+<li><code>refactor</code>: 重构</li>
+<li><code>test</code>: 测试相关</li>
+<li><code>chore</code>: 构建过程或辅助工具变动</li>
+</ul>
+<p><strong>示例</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git commit -m &quot;feat: 添加圣诞树旋转动画&quot;</span><br><span class="line">git commit -m &quot;fix: 修复移动端触摸事件冲突&quot;</span><br><span class="line">git commit -m &quot;docs: 更新安装说明&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="9-2-分支管理策略"><a href="#9-2-分支管理策略" class="headerlink" title="9.2 分支管理策略"></a>9.2 分支管理策略</h3><p><strong>Git Flow工作流</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">master (主分支，永远可部署)</span><br><span class="line">  ↑</span><br><span class="line">develop (开发分支)</span><br><span class="line">  ↑</span><br><span class="line">feature/login (功能分支)</span><br><span class="line">  ↑</span><br><span class="line">hotfix/1.0.1 (热修复分支)</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>命令示例</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 从develop创建功能分支</span><br><span class="line">git checkout -b feature/login develop</span><br><span class="line"></span><br><span class="line"># 完成功能后合并回develop</span><br><span class="line">git checkout develop</span><br><span class="line">git merge --no-ff feature/login</span><br><span class="line"></span><br><span class="line"># 发布时合并到master</span><br><span class="line">git checkout master</span><br><span class="line">git merge --no-ff develop</span><br><span class="line">git tag -a v1.0.0 -m &quot;版本1.0.0发布&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="9-3-保护敏感信息"><a href="#9-3-保护敏感信息" class="headerlink" title="9.3 保护敏感信息"></a>9.3 保护敏感信息</h3><p><strong>绝对不要提交</strong>：</p>
+<ul>
+<li>❌ 密码和API密钥</li>
+<li>❌ 私钥文件</li>
+<li>❌ 环境配置文件（.env）</li>
+<li>❌ 个人信息</li>
+</ul>
+<p><strong>使用环境变量</strong>：      </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 错误做法</span><br><span class="line">const API_KEY = &#x27;sk-1234567890abcdef&#x27;</span><br><span class="line"></span><br><span class="line">// 正确做法</span><br><span class="line">const API_KEY = process.env.API_KEY</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>使用.gitignore</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 环境配置</span><br><span class="line">.env</span><br><span class="line">.env.local</span><br><span class="line">config/keys.js</span><br><span class="line"></span><br><span class="line"># 密钥文件</span><br><span class="line">*.pem</span><br><span class="line">*.key</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="第十部分：常见问题速查表"><a href="#第十部分：常见问题速查表" class="headerlink" title="第十部分：常见问题速查表"></a>第十部分：常见问题速查表</h2><table>
+<thead>
+<tr>
+<th align="left">问题</th>
+<th align="left">可能原因</th>
+<th align="left">解决方案</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>src refspec main does not match any</code></td>
+<td align="left">分支名不匹配</td>
+<td align="left"><code>git push -u origin master</code></td>
+</tr>
+<tr>
+<td align="left"><code>Connection was reset</code></td>
+<td align="left">网络问题</td>
+<td align="left">切换到SSH协议</td>
+</tr>
+<tr>
+<td align="left"><code>Permission denied (publickey)</code></td>
+<td align="left">SSH密钥问题</td>
+<td align="left">重新添加密钥到GitHub</td>
+</tr>
+<tr>
+<td align="left"><code>failed to push some refs</code></td>
+<td align="left">远程有更新</td>
+<td align="left">先<code>git pull</code>再推送</td>
+</tr>
+<tr>
+<td align="left"><code>LF will be replaced by CRLF</code></td>
+<td align="left">换行符差异</td>
+<td align="left"><code>git config --global core.autocrlf true</code></td>
+</tr>
+<tr>
+<td align="left"><code>Your branch is ahead of &#39;origin/master&#39;</code></td>
+<td align="left">本地有未推送提交</td>
+<td align="left"><code>git push</code></td>
+</tr>
+<tr>
+<td align="left"><code>nothing to commit, working tree clean</code></td>
+<td align="left">没有修改</td>
+<td align="left">正常状态</td>
+</tr>
+<tr>
+<td align="left"><code>fatal: remote origin already exists</code></td>
+<td align="left">远程已配置</td>
+<td align="left"><code>git remote set-url origin 新地址</code></td>
+</tr>
+</tbody></table>
+<h2 id="结语：从今天开始使用GitHub"><a href="#结语：从今天开始使用GitHub" class="headerlink" title="结语：从今天开始使用GitHub"></a>结语：从今天开始使用GitHub</h2><p>将项目推送到GitHub不仅仅是技术操作，更是开启现代软件开发方式的第一步。通过本文的详细指南，你应该能够：</p>
+<h3 id="✅-你已经完成"><a href="#✅-你已经完成" class="headerlink" title="✅ 你已经完成"></a>✅ 你已经完成</h3><ol>
+<li>注册GitHub账号</li>
+<li>安装和配置Git</li>
+<li>生成并配置SSH密钥</li>
+<li>创建GitHub仓库</li>
+<li>成功将本地项目推送到远程</li>
+<li>解决常见错误</li>
+</ol>
+<h3 id="📚-下一步可以学习"><a href="#📚-下一步可以学习" class="headerlink" title="📚 下一步可以学习"></a>📚 下一步可以学习</h3><ol>
+<li>从GitHub克隆项目：<code>git clone git@github.com:用户名/仓库名.git</code></li>
+<li>参与开源项目：Fork → Clone → 修改 → Pull Request</li>
+<li>使用GitHub Pages部署静态网站<a href="https://zgj6017.github.io/2026/02/25/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%EF%BC%9AHexo%20+%20GitHub%20Pages%20%E5%AE%8C%E6%95%B4%E6%95%99%E7%A8%8B/">从零开始搭建个人博客</a></li>
+<li>配置GitHub Actions实现自动化</li>
+</ol>
+<h3 id="💡-记住这几点"><a href="#💡-记住这几点" class="headerlink" title="💡 记住这几点"></a>💡 记住这几点</h3><ul>
+<li><strong>经常提交</strong>：小步快跑，每完成一个功能就提交</li>
+<li><strong>写好信息</strong>：提交信息要清晰，便于后期追踪</li>
+<li><strong>先拉后推</strong>：推送前先拉取，避免冲突</li>
+<li><strong>保护密钥</strong>：永远不要提交敏感信息</li>
+<li><strong>遇到错误不要怕</strong>：错误提示是最好的老师</li>
+</ul>
+<p><strong>每个优秀的开发者都是从第一次<code>git push</code>开始的</strong>。不要害怕错误提示，它们是你学习路上最好的老师。如果在实践中还有任何问题，欢迎继续交流！</p>
+<hr>
+<p><em>本文是基于真实排错经验写成，记录了从一个初学者视角解决问题的心路历程。希望它能帮助你少走一些弯路，更快地进入GitHub的世界。</em></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/GitHub/" rel="tag"># GitHub</a>
+              <a href="/tags/Git/" rel="tag"># Git</a>
+              <a href="/tags/%E4%BB%A3%E7%A0%81%E6%89%98%E7%AE%A1/" rel="tag"># 代码托管</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/03/01/GitHub%E5%88%86%E6%94%AF%E4%BF%9D%E6%8A%A4%E4%B8%8ECICD%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97%EF%BC%9A%E4%BB%8E%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83%E5%88%B0%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/" rel="prev" title="GitHub分支保护与CI&#x2F;CD完全指南：从代码规范到自动化部署">
+                  <i class="fa fa-angle-left"></i> GitHub分支保护与CI/CD完全指南：从代码规范到自动化部署
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/03/01/%E5%8D%95%E8%BA%AB%E4%B8%8E%E6%97%A0%E8%81%8A%EF%BC%9A%E4%B8%80%E5%9C%BA%E5%85%B3%E4%BA%8E%E8%87%AA%E6%88%91%E7%9A%84%E5%AF%B9%E8%AF%9D/" rel="next" title="单身与无聊：一场关于自我的对话">
+                  单身与无聊：一场关于自我的对话 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">6017</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

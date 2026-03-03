@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous" defer></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zgj6017.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="想象一下这个场景：周一早上，你正准备向客户演示项目进展，突然发现线上版本出现了一个低级错误。排查后发现，是上周五同事为了赶进度，直接往 main 分支提交了未经测试的代码。更糟的是，这已经是本月第三次因为权限混乱导致的生产事故了。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GitHub 团队协作指南：从分支管理到权限控制">
+<meta property="og:url" content="https://zgj6017.github.io/2026/03/03/GitHub%20%E5%9B%A2%E9%98%9F%E5%8D%8F%E4%BD%9C%E6%8C%87%E5%8D%97%EF%BC%9A%E4%BB%8E%E5%88%86%E6%94%AF%E7%AE%A1%E7%90%86%E5%88%B0%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6/index.html">
+<meta property="og:site_name" content="6017">
+<meta property="og:description" content="想象一下这个场景：周一早上，你正准备向客户演示项目进展，突然发现线上版本出现了一个低级错误。排查后发现，是上周五同事为了赶进度，直接往 main 分支提交了未经测试的代码。更糟的是，这已经是本月第三次因为权限混乱导致的生产事故了。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-03-03T15:59:33.689Z">
+<meta property="article:modified_time" content="2026-03-03T15:59:33.912Z">
+<meta property="article:author" content="6017">
+<meta property="article:tag" content="GitHub">
+<meta property="article:tag" content="多人协作">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://zgj6017.github.io/2026/03/03/GitHub%20%E5%9B%A2%E9%98%9F%E5%8D%8F%E4%BD%9C%E6%8C%87%E5%8D%97%EF%BC%9A%E4%BB%8E%E5%88%86%E6%94%AF%E7%AE%A1%E7%90%86%E5%88%B0%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zgj6017.github.io/2026/03/03/GitHub%20%E5%9B%A2%E9%98%9F%E5%8D%8F%E4%BD%9C%E6%8C%87%E5%8D%97%EF%BC%9A%E4%BB%8E%E5%88%86%E6%94%AF%E7%AE%A1%E7%90%86%E5%88%B0%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6/","path":"2026/03/03/GitHub 团队协作指南：从分支管理到权限控制/","title":"GitHub 团队协作指南：从分支管理到权限控制"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>GitHub 团队协作指南：从分支管理到权限控制 | 6017</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+  <script src="/js/third-party/pace.js" defer></script>
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">6017</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">记录学习与生活</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%96%B0%E5%BB%BA-dev-%E5%88%86%E6%94%AF%E5%B9%B6%E8%AE%BE%E4%B8%BA%E9%BB%98%E8%AE%A4%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">一、为什么要新建 dev 分支并设为默认？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E4%B8%BB%E5%88%86%E6%94%AF%E6%B0%B8%E8%BF%9C%E8%A6%81%E4%BF%9D%E6%8C%81%E5%8F%AF%E5%8F%91%E5%B8%83"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 主分支永远要保持可发布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E6%8A%8A-dev-%E8%AE%BE%E4%B8%BA%E9%BB%98%E8%AE%A4%E5%88%86%E6%94%AF%E7%9A%84%E6%84%8F%E4%B9%89"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 把 dev 设为默认分支的意义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E5%AE%9E%E9%99%85%E6%93%8D%E4%BD%9C%E6%AD%A5%E9%AA%A4"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 实际操作步骤</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%A6%82%E4%BD%95%E7%AE%A1%E7%90%86%E9%BB%98%E8%AE%A4%E5%88%86%E6%94%AF%E7%9A%84%E6%9D%83%E9%99%90%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">二、如何管理默认分支的权限？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86%E7%9A%84%E6%A0%B8%E5%BF%83%EF%BC%9A%E5%88%86%E6%94%AF%E4%BF%9D%E6%8A%A4%E8%A7%84%E5%88%99"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 权限管理的核心：分支保护规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E8%AE%BE%E7%BD%AE%E5%88%86%E6%94%AF%E4%BF%9D%E6%8A%A4%E8%A7%84%E5%88%99%EF%BC%88%E8%AF%A6%E6%83%85%E8%A7%81GitHub%E5%88%86%E6%94%AF%E4%BF%9D%E6%8A%A4"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 设置分支保护规则（详情见GitHub分支保护)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E9%99%90%E5%88%B6%E8%B0%81%E5%8F%AF%E4%BB%A5%E6%8E%A8%E9%80%81"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 限制谁可以推送</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%9B%A2%E9%98%9F%EF%BC%9F%E5%A6%82%E4%BD%95%E7%BB%84%E5%BB%BA%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">三、为什么需要团队？如何组建？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E5%9B%A2%E9%98%9F%E7%9A%84%E4%BB%B7%E5%80%BC"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 团队的价值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E5%88%9B%E5%BB%BA%E7%BB%84%E7%BB%87%E7%9A%84%E6%AD%A5%E9%AA%A4"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 创建组织的步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E5%88%9B%E5%BB%BA%E5%9B%A2%E9%98%9F%E7%9A%84%E6%AD%A5%E9%AA%A4"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 创建团队的步骤</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%A6%82%E4%BD%95%E6%8A%8A%E5%9B%A2%E9%98%9F%E6%B7%BB%E5%8A%A0%E5%88%B0%E4%BB%93%E5%BA%93%EF%BC%9F"><span class="nav-number">4.</span> <span class="nav-text">四、如何把团队添加到仓库？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9A%E4%BB%8E%E4%BB%93%E5%BA%93%E5%87%BA%E5%8F%91%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="nav-number">4.1.</span> <span class="nav-text">方法一：从仓库出发（推荐）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9A%E4%BB%8E%E5%9B%A2%E9%98%9F%E5%87%BA%E5%8F%91"><span class="nav-number">4.2.</span> <span class="nav-text">方法二：从团队出发</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%B8%B8%E8%A7%81%E8%AF%AF%E8%A7%A3%EF%BC%9A%E5%9B%A2%E9%98%9F%E9%98%9F%E9%95%BF%E7%AD%89%E4%BA%8E%E4%BB%93%E5%BA%93%E6%89%80%E6%9C%89%E8%80%85%EF%BC%9F"><span class="nav-number">5.</span> <span class="nav-text">五、常见误解：团队队长等于仓库所有者？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E4%B8%A4%E7%A7%8D%E8%A7%92%E8%89%B2%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 两种角色的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E4%B8%BE%E4%B8%AA%E4%BE%8B%E5%AD%90"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 举个例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E5%A6%82%E4%BD%95%E8%AE%A9%E9%98%9F%E9%95%BF%E6%8B%A5%E6%9C%89%E7%AE%A1%E7%90%86%E6%9D%83%EF%BC%9F"><span class="nav-number">5.3.</span> <span class="nav-text">5.3 如何让队长拥有管理权？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%AE%8C%E6%95%B4%E5%AE%9E%E8%B7%B5%EF%BC%9A%E4%BB%8E%E9%9B%B6%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E8%A7%84%E8%8C%83%E7%9A%84%E9%A1%B9%E7%9B%AE"><span class="nav-number">6.</span> <span class="nav-text">六、完整实践：从零搭建一个规范的项目</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF%E8%AE%BE%E5%AE%9A"><span class="nav-number">6.1.</span> <span class="nav-text">场景设定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E6%96%BD%E6%AD%A5%E9%AA%A4"><span class="nav-number">6.2.</span> <span class="nav-text">实施步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%90%E6%9E%9C"><span class="nav-number">6.3.</span> <span class="nav-text">成果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E6%80%BB%E7%BB%93%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="nav-number">7.</span> <span class="nav-text">七、总结与最佳实践</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E5%8E%9F%E5%88%99"><span class="nav-number">7.1.</span> <span class="nav-text">关键原则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%BF%E5%9D%91%E6%8C%87%E5%8D%97"><span class="nav-number">7.2.</span> <span class="nav-text">避坑指南</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8E%E7%BB%AD%E5%BB%BA%E8%AE%AE"><span class="nav-number">7.3.</span> <span class="nav-text">后续建议</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="6017"
+      src="https://github.com/zgj6017.png">
+  <p class="site-author-name" itemprop="name">6017</p>
+  <div class="site-description" itemprop="description">在白云看了《硅谷之火》这本书后，想成为雷布斯的小佬</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zgj6017" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zgj6017" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zgj6017.github.io/2026/03/03/GitHub%20%E5%9B%A2%E9%98%9F%E5%8D%8F%E4%BD%9C%E6%8C%87%E5%8D%97%EF%BC%9A%E4%BB%8E%E5%88%86%E6%94%AF%E7%AE%A1%E7%90%86%E5%88%B0%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://github.com/zgj6017.png">
+      <meta itemprop="name" content="6017">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="6017">
+      <meta itemprop="description" content="在白云看了《硅谷之火》这本书后，想成为雷布斯的小佬">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="GitHub 团队协作指南：从分支管理到权限控制 | 6017">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          GitHub 团队协作指南：从分支管理到权限控制
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-03-03 23:59:33" itemprop="dateCreated datePublished" datetime="2026-03-03T23:59:33+08:00">2026-03-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E7%A7%91%E6%99%AE/" itemprop="url" rel="index"><span itemprop="name">技术科普</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>想象一下这个场景：周一早上，你正准备向客户演示项目进展，突然发现线上版本出现了一个低级错误。排查后发现，是上周五同事为了赶进度，直接往 <code>main</code> 分支提交了未经测试的代码。更糟的是，这已经是本月第三次因为权限混乱导致的生产事故了。</p>
+<span id="more"></span>
+
+<p>如果你正在经历以下场景：</p>
+<ul>
+<li>团队成员直接往 <code>main</code> 分支推送代码，导致生产环境频繁出问题</li>
+<li>新同事入职，需要手动给他添加十几个仓库的权限</li>
+<li>不知道如何设置”只有技术负责人才能合并到主分支”</li>
+<li>团队内部对”谁是仓库所有者”产生误解</li>
+</ul>
+<p>这篇文章将帮你彻底解决这些问题。我们会从实际需求出发，手把手教你搭建一个规范的 GitHub 协作体系。</p>
+<h2 id="一、为什么要新建-dev-分支并设为默认？"><a href="#一、为什么要新建-dev-分支并设为默认？" class="headerlink" title="一、为什么要新建 dev 分支并设为默认？"></a>一、为什么要新建 dev 分支并设为默认？</h2><p>很多团队一开始都是直接在 <code>main</code> 分支上开发。这种做法在小规模或个人项目中没问题，但当团队扩大后，问题就来了。</p>
+<h3 id="1-1-主分支永远要保持可发布"><a href="#1-1-主分支永远要保持可发布" class="headerlink" title="1.1 主分支永远要保持可发布"></a>1.1 主分支永远要保持可发布</h3><p>想象一下这个场景：你在开发一个新功能，代码写到一半还不能运行。这时候线上出现了一个紧急 Bug，需要立即修复。如果大家都在 <code>main</code> 分支上开发：</p>
+<ul>
+<li>你的半成品代码还在本地，同事无法帮你继续</li>
+<li>修复 Bug 的人可能会把你的代码一起带到生产环境</li>
+</ul>
+<p><strong>解决方案</strong>：引入 Git Flow 工作流</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">main 分支（稳定版） </span><br><span class="line">   ↑</span><br><span class="line">dev 分支（开发版）——功能分支1</span><br><span class="line">                ——功能分支2</span><br><span class="line">                ——Bug修复分支</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><strong>main 分支</strong>：永远存放可部署的稳定代码</li>
+<li><strong>dev 分支</strong>：日常开发集散地，允许有小问题</li>
+<li><strong>功能分支</strong>：从 dev 拉取，完成后合并回 dev</li>
+</ul>
+<h3 id="1-2-把-dev-设为默认分支的意义"><a href="#1-2-把-dev-设为默认分支的意义" class="headerlink" title="1.2 把 dev 设为默认分支的意义"></a>1.2 把 dev 设为默认分支的意义</h3><p>当把 <code>dev</code> 设为默认分支后：</p>
+<ul>
+<li>新成员克隆仓库时，自动拉取的是最新的开发代码</li>
+<li>Pull Request 默认目标分支就是 <code>dev</code>，减少手动修改的错误</li>
+<li>持续集成工具可以针对 <code>dev</code> 分支运行测试，而不影响 <code>main</code> 的稳定</li>
+</ul>
+<h3 id="1-3-实际操作步骤"><a href="#1-3-实际操作步骤" class="headerlink" title="1.3 实际操作步骤"></a>1.3 实际操作步骤</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 1. 创建 dev 分支</span><br><span class="line">git checkout -b dev</span><br><span class="line"></span><br><span class="line"># 2. 推送到远程</span><br><span class="line">git push -u origin dev</span><br><span class="line"></span><br><span class="line"># 3. 在 GitHub 网页端设置为默认分支</span><br><span class="line"># Settings → Branches → Default branch → 选择 dev → Update</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="二、如何管理默认分支的权限？"><a href="#二、如何管理默认分支的权限？" class="headerlink" title="二、如何管理默认分支的权限？"></a>二、如何管理默认分支的权限？</h2><p>有了 <code>dev</code> 分支后，下一步就是控制谁能往上面推送代码。</p>
+<h3 id="2-1-权限管理的核心：分支保护规则"><a href="#2-1-权限管理的核心：分支保护规则" class="headerlink" title="2.1 权限管理的核心：分支保护规则"></a>2.1 权限管理的核心：分支保护规则</h3><p>GitHub 的权限体系是分层的：</p>
+<ol>
+<li><strong>仓库访问权限</strong>：决定谁能看、谁能写</li>
+<li><strong>分支保护规则</strong>：精细化控制特定分支</li>
+</ol>
+<h3 id="2-2-设置分支保护规则（详情见GitHub分支保护"><a href="#2-2-设置分支保护规则（详情见GitHub分支保护" class="headerlink" title="2.2 设置分支保护规则（详情见GitHub分支保护)"></a>2.2 设置分支保护规则（详情见<a href="https://zgj6017.github.io/2026/03/01/GitHub%E5%88%86%E6%94%AF%E4%BF%9D%E6%8A%A4%E4%B8%8ECICD%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97%EF%BC%9A%E4%BB%8E%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83%E5%88%B0%E8%87%AA%E5%8A%A8%E5%8C%96%E9%83%A8%E7%BD%B2/#more">GitHub分支保护</a>)</h3><p>进入仓库的 <code>Settings → Branches → Add rule</code>：</p>
+<p><strong>规则示例 - 开发分支 (dev)</strong>：</p>
+<ul>
+<li>✅ Require a pull request before merging（必须通过 PR 合并）</li>
+<li>✅ Require approvals（需要至少 1 人审查）</li>
+<li>✅ Dismiss stale pull request approvals（新提交后撤销旧批准）</li>
+</ul>
+<p><strong>规则示例 - 主分支 (main)</strong>：</p>
+<ul>
+<li>以上所有规则</li>
+<li>✅ Include administrators（管理员也要遵守）</li>
+<li>✅ Require status checks（必须通过 CI 测试）</li>
+</ul>
+<h3 id="2-3-限制谁可以推送"><a href="#2-3-限制谁可以推送" class="headerlink" title="2.3 限制谁可以推送"></a>2.3 限制谁可以推送</h3><p>在规则中找到 <strong>“Restrict who can push to matching branches”</strong>：</p>
+<ul>
+<li>可以添加特定用户</li>
+<li>可以添加整个团队</li>
+<li>不在列表里的人，即使有写入权限也无法直接推送</li>
+</ul>
+<h2 id="三、为什么需要团队？如何组建？"><a href="#三、为什么需要团队？如何组建？" class="headerlink" title="三、为什么需要团队？如何组建？"></a>三、为什么需要团队？如何组建？</h2><p>随着项目增多，手动管理每个仓库的协作者变得不可持续。这就是 GitHub 组织（Organization）和团队（Team）发挥作用的地方。</p>
+<h3 id="3-1-团队的价值"><a href="#3-1-团队的价值" class="headerlink" title="3.1 团队的价值"></a>3.1 团队的价值</h3><ul>
+<li><strong>批量授权</strong>：把一个团队加到仓库，所有成员自动获得权限</li>
+<li><strong>沟通便利</strong>：用 @团队名 可以一次性通知所有人</li>
+<li><strong>职责清晰</strong>：前端团队、后端团队、运维团队各司其职</li>
+</ul>
+<h3 id="3-2-创建组织的步骤"><a href="#3-2-创建组织的步骤" class="headerlink" title="3.2 创建组织的步骤"></a>3.2 创建组织的步骤</h3><ol>
+<li>点击 GitHub 右上角 <code>+</code> → <code>New organization</code></li>
+<li>选择免费计划</li>
+<li>填写组织名称（如 <code>ABC科技</code>）</li>
+<li>邀请初始成员（可选）</li>
+</ol>
+<h3 id="3-3-创建团队的步骤"><a href="#3-3-创建团队的步骤" class="headerlink" title="3.3 创建团队的步骤"></a>3.3 创建团队的步骤</h3><p>进入组织页面 → <code>Teams</code> → <code>New team</code>：</p>
+<ul>
+<li><strong>名称</strong>：前端组、后端组、DevOps</li>
+<li><strong>描述</strong>：让成员知道这个团队的职责</li>
+<li><strong>可见性</strong>：公开或私密</li>
+</ul>
+<h2 id="四、如何把团队添加到仓库？"><a href="#四、如何把团队添加到仓库？" class="headerlink" title="四、如何把团队添加到仓库？"></a>四、如何把团队添加到仓库？</h2><p>有两种方法，任选其一即可。</p>
+<h3 id="方法一：从仓库出发（推荐）"><a href="#方法一：从仓库出发（推荐）" class="headerlink" title="方法一：从仓库出发（推荐）"></a>方法一：从仓库出发（推荐）</h3><ol>
+<li>进入仓库 → <code>Settings</code> → <code>Collaborators and teams</code></li>
+<li>点击 <code>Invite teams or people</code></li>
+<li>输入团队名称（如 “前端组”）</li>
+<li>选择权限级别：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th align="left">权限</th>
+<th align="left">适用场景</th>
+<th align="left">能力</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Read</td>
+<td align="left">产品经理、项目经理</td>
+<td align="left">查看代码、Issue</td>
+</tr>
+<tr>
+<td align="left">Triage</td>
+<td align="left">测试人员</td>
+<td align="left">管理 Issue，不能推送</td>
+</tr>
+<tr>
+<td align="left">Write</td>
+<td align="left"><strong>开发人员</strong></td>
+<td align="left">推送代码、创建 PR</td>
+</tr>
+<tr>
+<td align="left">Maintain</td>
+<td align="left">技术负责人</td>
+<td align="left">管理仓库设置</td>
+</tr>
+<tr>
+<td align="left">Admin</td>
+<td align="left">仓库负责人</td>
+<td align="left">所有操作权限</td>
+</tr>
+</tbody></table>
+<h3 id="方法二：从团队出发"><a href="#方法二：从团队出发" class="headerlink" title="方法二：从团队出发"></a>方法二：从团队出发</h3><ol>
+<li>进入组织 → <code>Teams</code> → 选择团队</li>
+<li>点击 <code>Repositories</code> → <code>Add repository</code></li>
+<li>选择仓库并设置权限</li>
+</ol>
+<h2 id="五、常见误解：团队队长等于仓库所有者？"><a href="#五、常见误解：团队队长等于仓库所有者？" class="headerlink" title="五、常见误解：团队队长等于仓库所有者？"></a>五、常见误解：团队队长等于仓库所有者？</h2><p>这是一个需要澄清的重要概念。</p>
+<h3 id="5-1-两种角色的区别"><a href="#5-1-两种角色的区别" class="headerlink" title="5.1 两种角色的区别"></a>5.1 两种角色的区别</h3><table>
+<thead>
+<tr>
+<th align="left">角色</th>
+<th align="left">权限范围</th>
+<th align="left">能否删除仓库</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>团队维护者</strong></td>
+<td align="left">管理团队成员（增删成员）</td>
+<td align="left">❌ 不能</td>
+</tr>
+<tr>
+<td align="left"><strong>仓库管理员</strong></td>
+<td align="left">管理仓库代码和设置</td>
+<td align="left">✅ 能</td>
+</tr>
+</tbody></table>
+<h3 id="5-2-举个例子"><a href="#5-2-举个例子" class="headerlink" title="5.2 举个例子"></a>5.2 举个例子</h3><p>假设：</p>
+<ul>
+<li>小张是”前端组”的团队维护者</li>
+<li>“前端组”被添加到 <code>web-app</code> 仓库，权限为 <code>Write</code></li>
+</ul>
+<p>那么小张可以：</p>
+<ul>
+<li>✅ 在团队里添加或移除成员</li>
+<li>✅ 往 <code>web-app</code> 推送代码</li>
+<li>✅ 创建和合并 PR</li>
+</ul>
+<p>但小张不能：</p>
+<ul>
+<li>❌ 修改 <code>web-app</code> 的 GitHub 设置</li>
+<li>❌ 删除 <code>web-app</code> 仓库</li>
+<li>❌ 给其他人分配仓库权限</li>
+</ul>
+<h3 id="5-3-如何让队长拥有管理权？"><a href="#5-3-如何让队长拥有管理权？" class="headerlink" title="5.3 如何让队长拥有管理权？"></a>5.3 如何让队长拥有管理权？</h3><p>如果你确实需要队长管理仓库，需要明确授权：</p>
+<p><strong>方案一</strong>：给团队更高权限</p>
+<ul>
+<li>在仓库的协作者设置中，把团队的权限改为 <code>Admin</code></li>
+</ul>
+<p><strong>方案二</strong>：单独授权个人</p>
+<ul>
+<li>把队长作为个人协作者添加，授予 <code>Admin</code> 权限</li>
+</ul>
+<h2 id="六、完整实践：从零搭建一个规范的项目"><a href="#六、完整实践：从零搭建一个规范的项目" class="headerlink" title="六、完整实践：从零搭建一个规范的项目"></a>六、完整实践：从零搭建一个规范的项目</h2><p>让我们把以上知识串起来，模拟一个真实场景。</p>
+<h3 id="场景设定"><a href="#场景设定" class="headerlink" title="场景设定"></a>场景设定</h3><ul>
+<li>项目名称：<code>e-commerce</code>（电商网站）</li>
+<li>团队组成：前端组（3人）、后端组（4人）、运维组（2人）</li>
+<li>要求：<ul>
+<li>只有技术负责人能合并到 <code>main</code></li>
+<li>开发人员通过 PR 提交代码到 <code>dev</code></li>
+<li>新成员加入自动获得对应权限</li>
+</ul>
+</li>
+</ul>
+<h3 id="实施步骤"><a href="#实施步骤" class="headerlink" title="实施步骤"></a>实施步骤</h3><p><strong>第1步：创建组织和团队</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ABC科技（组织）</span><br><span class="line">├── 前端组</span><br><span class="line">├── 后端组</span><br><span class="line">├── 运维组</span><br><span class="line">└── 技术委员会（技术负责人）</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>第2步：创建仓库并设置分支</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git init e-commerce</span><br><span class="line">cd e-commerce</span><br><span class="line">git checkout -b main</span><br><span class="line">git checkout -b dev</span><br><span class="line">git push -u origin main dev</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>第3步：设置默认分支</strong></p>
+<ul>
+<li>网页端：<code>Settings → Branches</code> → 将 <code>dev</code> 设为默认</li>
+</ul>
+<p><strong>第4步：添加分支保护</strong></p>
+<p>dev 分支：</p>
+<ul>
+<li>必须通过 PR</li>
+<li>需要 1 个审查</li>
+<li>允许所有开发人员推送</li>
+</ul>
+<p>main 分支：</p>
+<ul>
+<li>必须通过 PR</li>
+<li>需要 2 个审查</li>
+<li>只允许技术委员会推送</li>
+</ul>
+<p><strong>第5步：添加团队到仓库</strong></p>
+<ul>
+<li>前端组 → <code>Write</code> 权限</li>
+<li>后端组 → <code>Write</code> 权限</li>
+<li>运维组 → <code>Read</code> 权限（或 Triage）</li>
+<li>技术委员会 → <code>Admin</code> 权限</li>
+</ul>
+<h3 id="成果"><a href="#成果" class="headerlink" title="成果"></a>成果</h3><ul>
+<li>新来的前端同事：加入”前端组”后，自动获得所有前端项目的 <code>Write</code> 权限</li>
+<li>运维同事：只能查看代码，不能修改</li>
+<li>技术负责人：拥有所有仓库的最终管理权</li>
+<li>主分支：永远保持稳定，只有经过审查的代码才能进入</li>
+</ul>
+<h2 id="七、总结与最佳实践"><a href="#七、总结与最佳实践" class="headerlink" title="七、总结与最佳实践"></a>七、总结与最佳实践</h2><h3 id="关键原则"><a href="#关键原则" class="headerlink" title="关键原则"></a>关键原则</h3><ol>
+<li><strong>分支即环境</strong>：<code>main</code> 是生产，<code>dev</code> 是开发</li>
+<li><strong>保护即规则</strong>：用分支保护规则代替口头约定</li>
+<li><strong>团队即权限</strong>：用团队管理代替个人管理</li>
+<li><strong>授权即分离</strong>：团队管理和仓库管理是两回事</li>
+</ol>
+<h3 id="避坑指南"><a href="#避坑指南" class="headerlink" title="避坑指南"></a>避坑指南</h3><ul>
+<li>❌ 不要给所有人 <code>Admin</code> 权限</li>
+<li>❌ 不要直接往 <code>main</code> 推送</li>
+<li>❌ 不要手动一个个添加协作者</li>
+<li>✅ 善用团队和分支保护规则</li>
+</ul>
+<h3 id="后续建议"><a href="#后续建议" class="headerlink" title="后续建议"></a>后续建议</h3><ol>
+<li>定期审查仓库权限，移除不必要的访问</li>
+<li>培养团队成员通过 PR 协作的习惯</li>
+<li>把权限管理文档化，让新成员快速上手</li>
+</ol>
+<hr>
+<p>通过这套体系，你可以把 GitHub 从一个简单的代码托管平台，升级为一个高效、规范、可扩展的协作平台。无论团队规模如何变化，这套基础架构都能支撑你们平稳运行</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/GitHub/" rel="tag"># GitHub</a>
+              <a href="/tags/%E5%A4%9A%E4%BA%BA%E5%8D%8F%E4%BD%9C/" rel="tag"># 多人协作</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/03/01/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%EF%BC%9AHexo%20+%20GitHub%20Pages%20%E5%AE%8C%E6%95%B4%E6%95%99%E7%A8%8B/" rel="prev" title="🚀 从零开始搭建个人博客：Hexo + GitHub Pages 完整教程（含代码详解）">
+                  <i class="fa fa-angle-left"></i> 🚀 从零开始搭建个人博客：Hexo + GitHub Pages 完整教程（含代码详解）
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">6017</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
