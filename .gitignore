@@ -4,5 +4,11 @@ db.json
 *.log
 node_modules/
 public/
-.deploy*/
-_multiconfig.yml
+.deploy_git/
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+coverage/
+package-lock.json
+yarn.lock
