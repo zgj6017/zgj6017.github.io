@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous" defer></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zgj6017.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="最近想在同一台电脑上同时使用 MySQL 5.7 和 8.0，本以为是个折腾的过程，没想到用 MySQL Installer 居然这么简单——完全不用手动改端口，只要不同时启动两个服务就行。 这篇文章就把我的安装经验分享出来，特别是那些容易踩的坑：安装窗口突然缩得看不见、认证方式选错连不上……希望能帮到同样在安装 MySQL 的朋友。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL 多版本共存安装指南：5.7 + 8.0 一起装，用 DataGrip 代替 Workbench">
+<meta property="og:url" content="https://zgj6017.github.io/2026/03/05/MySQL%20%E5%A4%9A%E7%89%88%E6%9C%AC%E5%85%B1%E5%AD%98%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97%EF%BC%9A5.7%20+%208.0%20%E4%B8%80%E8%B5%B7%E8%A3%85%EF%BC%8C%E7%94%A8%20DataGrip%20%E4%BB%A3%E6%9B%BF%20Workbench/index.html">
+<meta property="og:site_name" content="6017">
+<meta property="og:description" content="最近想在同一台电脑上同时使用 MySQL 5.7 和 8.0，本以为是个折腾的过程，没想到用 MySQL Installer 居然这么简单——完全不用手动改端口，只要不同时启动两个服务就行。 这篇文章就把我的安装经验分享出来，特别是那些容易踩的坑：安装窗口突然缩得看不见、认证方式选错连不上……希望能帮到同样在安装 MySQL 的朋友。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-03-05T08:00:00.000Z">
+<meta property="article:modified_time" content="2026-03-05T08:00:00.000Z">
+<meta property="article:author" content="6017">
+<meta property="article:tag" content="MySQL">
+<meta property="article:tag" content="版本共存">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://zgj6017.github.io/2026/03/05/MySQL%20%E5%A4%9A%E7%89%88%E6%9C%AC%E5%85%B1%E5%AD%98%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97%EF%BC%9A5.7%20+%208.0%20%E4%B8%80%E8%B5%B7%E8%A3%85%EF%BC%8C%E7%94%A8%20DataGrip%20%E4%BB%A3%E6%9B%BF%20Workbench/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://zgj6017.github.io/2026/03/05/MySQL%20%E5%A4%9A%E7%89%88%E6%9C%AC%E5%85%B1%E5%AD%98%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97%EF%BC%9A5.7%20+%208.0%20%E4%B8%80%E8%B5%B7%E8%A3%85%EF%BC%8C%E7%94%A8%20DataGrip%20%E4%BB%A3%E6%9B%BF%20Workbench/","path":"2026/03/05/MySQL 多版本共存安装指南：5.7 + 8.0 一起装，用 DataGrip 代替 Workbench/","title":"MySQL 多版本共存安装指南：5.7 + 8.0 一起装，用 DataGrip 代替 Workbench"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>MySQL 多版本共存安装指南：5.7 + 8.0 一起装，用 DataGrip 代替 Workbench | 6017</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+  <script src="/js/third-party/pace.js" defer></script>
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">6017</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">记录学习与生活</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E6%8E%A8%E8%8D%90-MySQL-Installer%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">一、为什么推荐 MySQL Installer？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="nav-number">2.</span> <span class="nav-text">二、准备工作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E4%B8%8B%E8%BD%BD-MySQL-Installer"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 下载 MySQL Installer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E9%87%8D%E8%A6%81%E6%8F%90%E9%86%92%EF%BC%9A%E4%B8%8D%E8%A6%81%E7%82%B9%E5%8F%B3%E9%94%AE%EF%BC%81"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 重要提醒：不要点右键！</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%AE%89%E8%A3%85-MySQL-8-0%EF%BC%88%E5%90%8C%E6%97%B6%E4%BF%9D%E7%95%99-5-7%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">三、安装 MySQL 8.0（同时保留 5.7）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E5%90%AF%E5%8A%A8%E5%AE%89%E8%A3%85%E7%A8%8B%E5%BA%8F"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 启动安装程序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E9%80%89%E6%8B%A9%E5%AE%89%E8%A3%85%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 选择安装类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E9%80%89%E6%8B%A9%E8%A6%81%E5%AE%89%E8%A3%85%E7%9A%84%E7%BB%84%E4%BB%B6"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 选择要安装的组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E8%B7%AF%E5%BE%84%E5%86%B2%E7%AA%81%E7%9A%84%E5%A4%84%E7%90%86"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 路径冲突的处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-%E5%BC%80%E5%A7%8B%E5%AE%89%E8%A3%85"><span class="nav-number">3.5.</span> <span class="nav-text">3.5 开始安装</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E9%85%8D%E7%BD%AE-MySQL-8-0"><span class="nav-number">4.</span> <span class="nav-text">四、配置 MySQL 8.0</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE%EF%BC%88%E8%BF%99%E4%B8%80%E6%AD%A5%E4%BB%80%E4%B9%88%E9%83%BD%E4%B8%8D%E7%94%A8%E6%94%B9%EF%BC%81%EF%BC%89"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 网络配置（这一步什么都不用改！）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E8%AE%A4%E8%AF%81%E6%96%B9%E5%BC%8F%E9%80%89%E6%8B%A9%EF%BC%88%E6%9C%80%E5%AE%B9%E6%98%93%E8%B8%A9%E5%9D%91%E7%9A%84%E5%9C%B0%E6%96%B9%EF%BC%81%EF%BC%89"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 认证方式选择（最容易踩坑的地方！）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E8%AE%BE%E7%BD%AE-root-%E5%AF%86%E7%A0%81"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 设置 root 密码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-Windows-%E6%9C%8D%E5%8A%A1%E9%85%8D%E7%BD%AE"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 Windows 服务配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E7%94%A8-MySQL-Workbench%EF%BC%9F"><span class="nav-number">5.</span> <span class="nav-text">五、为什么不用 MySQL Workbench？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E4%B8%8B%E8%BD%BD-DataGrip"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 下载 DataGrip</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E9%85%8D%E7%BD%AE-DataGrip-%E8%BF%9E%E6%8E%A5%E4%B8%A4%E4%B8%AA-MySQL-%E7%89%88%E6%9C%AC"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 配置 DataGrip 连接两个 MySQL 版本</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E8%BF%99%E4%B8%A4%E4%B8%AA%E7%89%88%E6%9C%AC%EF%BC%9F"><span class="nav-number">6.</span> <span class="nav-text">六、如何使用这两个版本？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-%E6%A0%B8%E5%BF%83%E5%8E%9F%E5%88%99%EF%BC%9A%E4%B8%8D%E5%90%8C%E6%97%B6%E5%90%AF%E5%8A%A8"><span class="nav-number">6.1.</span> <span class="nav-text">6.1 核心原则：不同时启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-%E8%AE%BE%E7%BD%AE%E6%9C%8D%E5%8A%A1%E4%B8%BA%E6%89%8B%E5%8A%A8%E5%90%AF%E5%8A%A8%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="nav-number">6.2.</span> <span class="nav-text">6.2 设置服务为手动启动（推荐）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E9%AA%8C%E8%AF%81%E5%AE%89%E8%A3%85"><span class="nav-number">7.</span> <span class="nav-text">七、验证安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%B5%8B%E8%AF%95%E8%BF%9E%E6%8E%A5"><span class="nav-number">7.1.</span> <span class="nav-text">7.1 命令行测试连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-DataGrip-%E4%B8%AD%E5%88%87%E6%8D%A2%E8%BF%9E%E6%8E%A5"><span class="nav-number">7.2.</span> <span class="nav-text">7.2 DataGrip 中切换连接</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3"><span class="nav-number">8.</span> <span class="nav-text">八、常见问题解决</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-%E5%AE%89%E8%A3%85%E7%AA%97%E5%8F%A3%E7%BC%A9%E5%BE%97%E5%BE%88%E5%B0%8F%E7%9C%8B%E4%B8%8D%E8%A7%81"><span class="nav-number">8.1.</span> <span class="nav-text">8.1 安装窗口缩得很小看不见</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-%E4%B8%A4%E4%B8%AA%E6%9C%8D%E5%8A%A1%E5%90%8C%E6%97%B6%E5%90%AF%E5%8A%A8%E4%BA%86%E6%80%8E%E4%B9%88%E5%8A%9E%EF%BC%9F"><span class="nav-number">8.2.</span> <span class="nav-text">8.2 两个服务同时启动了怎么办？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-3-%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%BF%9E%E6%8E%A5-8-0-%E6%8A%A5%E9%94%99-%E2%80%9CAuthentication-plugin-%E2%80%98caching-sha2-password%E2%80%99%E2%80%9D"><span class="nav-number">8.3.</span> <span class="nav-text">8.3 客户端连接 8.0 报错 “Authentication plugin ‘caching_sha2_password’”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-4-%E5%BF%98%E8%AE%B0%E4%BA%86-root-%E5%AF%86%E7%A0%81%E6%80%8E%E4%B9%88%E5%8A%9E%EF%BC%9F"><span class="nav-number">8.4.</span> <span class="nav-text">8.4 忘记了 root 密码怎么办？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">9.</span> <span class="nav-text">九、总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="6017"
+      src="https://github.com/zgj6017.png">
+  <p class="site-author-name" itemprop="name">6017</p>
+  <div class="site-description" itemprop="description">在白云看了《硅谷之火》这本书后，想成为雷布斯的小佬</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">37</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zgj6017" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zgj6017" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zgj6017.github.io/2026/03/05/MySQL%20%E5%A4%9A%E7%89%88%E6%9C%AC%E5%85%B1%E5%AD%98%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97%EF%BC%9A5.7%20+%208.0%20%E4%B8%80%E8%B5%B7%E8%A3%85%EF%BC%8C%E7%94%A8%20DataGrip%20%E4%BB%A3%E6%9B%BF%20Workbench/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://github.com/zgj6017.png">
+      <meta itemprop="name" content="6017">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="6017">
+      <meta itemprop="description" content="在白云看了《硅谷之火》这本书后，想成为雷布斯的小佬">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="MySQL 多版本共存安装指南：5.7 + 8.0 一起装，用 DataGrip 代替 Workbench | 6017">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MySQL 多版本共存安装指南：5.7 + 8.0 一起装，用 DataGrip 代替 Workbench
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-03-05 16:00:00" itemprop="dateCreated datePublished" datetime="2026-03-05T16:00:00+08:00">2026-03-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E7%A7%91%E6%99%AE/" itemprop="url" rel="index"><span itemprop="name">技术科普</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>最近想在同一台电脑上同时使用 MySQL 5.7 和 8.0，本以为是个折腾的过程，没想到用 MySQL Installer 居然这么简单——<strong>完全不用手动改端口，只要不同时启动两个服务就行</strong>。</p>
+<p>这篇文章就把我的安装经验分享出来，特别是那些容易踩的坑：安装窗口突然缩得看不见、认证方式选错连不上……希望能帮到同样在安装 MySQL 的朋友。</p>
+<span id="more"></span>
+
+<p><strong>特别提醒</strong>：安装过程中<strong>千万别点鼠标右键</strong>，否则安装窗口会缩得特别小，根本看不清内容！</p>
+<hr>
+<h2 id="一、为什么推荐-MySQL-Installer？"><a href="#一、为什么推荐-MySQL-Installer？" class="headerlink" title="一、为什么推荐 MySQL Installer？"></a>一、为什么推荐 MySQL Installer？</h2><p>MySQL 官方提供了两种安装方式：</p>
+<ul>
+<li><strong>ZIP 压缩包</strong>：需要手动配置、手动初始化，容易出错</li>
+<li><strong>MSI 安装包（MySQL Installer）</strong>：图形化界面，自动配置，<strong>特别适合多版本共存</strong></li>
+</ul>
+<p>用 Installer 的最大好处是：它会自动处理好端口、服务名、数据目录的隔离，<strong>你完全不用操心端口冲突的问题</strong>。只要不同时启动两个服务，它们就能和平共处。</p>
+<hr>
+<h2 id="二、准备工作"><a href="#二、准备工作" class="headerlink" title="二、准备工作"></a>二、准备工作</h2><h3 id="2-1-下载-MySQL-Installer"><a href="#2-1-下载-MySQL-Installer" class="headerlink" title="2.1 下载 MySQL Installer"></a>2.1 下载 MySQL Installer</h3><p>访问 <a target="_blank" rel="noopener" href="https://dev.mysql.com/downloads/installer/">MySQL 官方下载页面</a>，下载 <code>mysql-installer-community-xxx.msi</code>。</p>
+<p>有两个版本可选：</p>
+<ul>
+<li><strong>Web 版</strong>：只有几 MB，安装时在线下载组件</li>
+<li><strong>完整版</strong>：约 300 多 MB，包含所有组件，<strong>推荐下载这个</strong>，避免安装时网络问题</li>
+</ul>
+<h3 id="2-2-重要提醒：不要点右键！"><a href="#2-2-重要提醒：不要点右键！" class="headerlink" title="2.2 重要提醒：不要点右键！"></a>2.2 重要提醒：不要点右键！</h3><p>这是最坑的一个问题：在安装过程中，如果不小心点了鼠标右键，安装窗口会瞬间缩成一条线，完全无法操作。</p>
+<p>如果不小心发生了，别慌：</p>
+<ul>
+<li>在任务栏找到 MySQL Installer 图标</li>
+<li>右键点击，选择「最大化」</li>
+<li>或者用快捷键 <code>Alt + 空格键 + X</code></li>
+</ul>
+<p>不过最好的方法是<strong>全程用左键点击，别碰右键</strong>。</p>
+<hr>
+<h2 id="三、安装-MySQL-8-0（同时保留-5-7）"><a href="#三、安装-MySQL-8-0（同时保留-5-7）" class="headerlink" title="三、安装 MySQL 8.0（同时保留 5.7）"></a>三、安装 MySQL 8.0（同时保留 5.7）</h2><h3 id="3-1-启动安装程序"><a href="#3-1-启动安装程序" class="headerlink" title="3.1 启动安装程序"></a>3.1 启动安装程序</h3><p>双击下载的安装文件，如果提示需要管理员权限，点击「是」。</p>
+<h3 id="3-2-选择安装类型"><a href="#3-2-选择安装类型" class="headerlink" title="3.2 选择安装类型"></a>3.2 选择安装类型</h3><p>你会看到三个选项：</p>
+<ul>
+<li><strong>Typical（典型安装）</strong>：安装最常用功能</li>
+<li><strong>Custom（自定义安装）</strong>：可以自己选择组件和安装路径</li>
+<li><strong>Complete（完整安装）</strong>：安装所有功能</li>
+</ul>
+<p><strong>推荐选择「Custom」</strong>，因为我们要有选择性地只装需要的组件。</p>
+<h3 id="3-3-选择要安装的组件"><a href="#3-3-选择要安装的组件" class="headerlink" title="3.3 选择要安装的组件"></a>3.3 选择要安装的组件</h3><p>在这个界面，左侧是可选组件，右侧是你要安装的组件。</p>
+<p><strong>只需要添加一项：</strong></p>
+<ol>
+<li>在左侧找到 <code>MySQL Servers</code> → <code>MySQL Server 8.0</code> → <code>MySQL Server 8.0.45</code></li>
+<li>选中后点击中间的绿色箭头 <code>&gt;</code>，移到右侧</li>
+</ol>
+<p><strong>⚠️ 注意：不要添加 MySQL Workbench！</strong> 我们后面会用 DataGrip 代替，体验更好。</p>
+<p>页面底部有个「Enable the Select Features page」的勾选框，<strong>保持不勾选</strong>，否则后面会多出很多复杂配置。</p>
+<h3 id="3-4-路径冲突的处理"><a href="#3-4-路径冲突的处理" class="headerlink" title="3.4 路径冲突的处理"></a>3.4 路径冲突的处理</h3><p>如果你之前装过 MySQL 5.7，可能会遇到路径冲突的提示：</p>
+
+
+<p>这是因为默认路径（<code>C:\Program Files\MySQL\MySQL Server 8.0</code>）可能已被占用。</p>
+<p><strong>处理方法</strong>：</p>
+<ul>
+<li><strong>方案一（推荐）</strong>：修改安装路径，让 8.0 和 5.7 彻底分开<ul>
+<li>Install Directory：<code>D:\MySQL\MySQL Server 8.0</code></li>
+<li>Data Directory：<code>D:\MySQL\Data 8.0</code></li>
+</ul>
+</li>
+<li><strong>方案二</strong>：确认原文件夹没有重要数据后，直接覆盖（不推荐新手尝试）</li>
+</ul>
+<h3 id="3-5-开始安装"><a href="#3-5-开始安装" class="headerlink" title="3.5 开始安装"></a>3.5 开始安装</h3><p>点击 <strong>Execute</strong>，等待安装完成。这个过程大概 1-5 分钟，取决于电脑性能。</p>
+<hr>
+<h2 id="四、配置-MySQL-8-0"><a href="#四、配置-MySQL-8-0" class="headerlink" title="四、配置 MySQL 8.0"></a>四、配置 MySQL 8.0</h2><h3 id="4-1-网络配置（这一步什么都不用改！）"><a href="#4-1-网络配置（这一步什么都不用改！）" class="headerlink" title="4.1 网络配置（这一步什么都不用改！）"></a>4.1 网络配置（这一步什么都不用改！）</h3>
+
+<p><strong>关键提示</strong>：这里<strong>完全不用改端口</strong>，保持默认的 3306 就行。</p>
+<p>为什么不用改？</p>
+<ul>
+<li>MySQL Installer 会自动处理好两个版本的隔离</li>
+<li>只要你<strong>不同时启动两个服务</strong>，就不会有端口冲突</li>
+<li>平时需要用哪个版本，就启动哪个服务的</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">配置项</th>
+<th align="left">推荐操作</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Config Type</td>
+<td align="left">保持默认</td>
+<td align="left">Development Computer（开发机）</td>
+</tr>
+<tr>
+<td align="left">TCP&#x2F;IP Port</td>
+<td align="left"><strong>保持 3306</strong></td>
+<td align="left">不用改！</td>
+</tr>
+<tr>
+<td align="left">X Protocol Port</td>
+<td align="left">保持 33060</td>
+<td align="left">不用动</td>
+</tr>
+<tr>
+<td align="left">Open Firewall Ports</td>
+<td align="left">建议勾选</td>
+<td align="left">方便后续可能需要的远程连接</td>
+</tr>
+<tr>
+<td align="left">Show Advanced Options</td>
+<td align="left">不勾选</td>
+<td align="left">保持默认</td>
+</tr>
+</tbody></table>
+<h3 id="4-2-认证方式选择（最容易踩坑的地方！）"><a href="#4-2-认证方式选择（最容易踩坑的地方！）" class="headerlink" title="4.2 认证方式选择（最容易踩坑的地方！）"></a>4.2 认证方式选择（最容易踩坑的地方！）</h3>
+
+<p><strong>一定要选下面那个！</strong></p>
+<ul>
+<li>❌ <strong>上面：Use Strong Password Encryption</strong>（MySQL 8.0 默认强加密）</li>
+<li>✅ <strong>下面：Use Legacy Authentication Method</strong>（兼容 MySQL 5.x）</li>
+</ul>
+<p>为什么必须选 Legacy？</p>
+<ol>
+<li>你的电脑上已经有 MySQL 5.7，很多现有工具默认使用传统认证</li>
+<li>选了 Strong，可能导致 DataGrip 或其他客户端连不上</li>
+<li>选了 Legacy，所有工具开箱即用，不用折腾配置</li>
+</ol>
+<h3 id="4-3-设置-root-密码"><a href="#4-3-设置-root-密码" class="headerlink" title="4.3 设置 root 密码"></a>4.3 设置 root 密码</h3>
+
+<p>输入你想要设置的密码，点击 <strong>Check</strong> 检查强度。密码要求：</p>
+<ul>
+<li>至少 8 位</li>
+<li>包含大小写字母、数字、特殊字符</li>
+</ul>
+<p><strong>记住这个密码</strong>，以后连接 MySQL 8.0 都要用。</p>
+<h3 id="4-4-Windows-服务配置"><a href="#4-4-Windows-服务配置" class="headerlink" title="4.4 Windows 服务配置"></a>4.4 Windows 服务配置</h3><p>下一步是 Windows 服务配置：</p>
+<ul>
+<li>服务名：<code>MySQL80</code>（会自动和 5.7 的 <code>MySQL57</code> 区分开）</li>
+<li><strong>启动类型</strong>：建议选「Manual」（手动），这样不会开机自启</li>
+<li>如果之前选过「Automatic」，也没关系，平时不启动就行</li>
+</ul>
+<p>点击 <strong>Execute</strong> 应用配置，完成安装。</p>
+<hr>
+<h2 id="五、为什么不用-MySQL-Workbench？"><a href="#五、为什么不用-MySQL-Workbench？" class="headerlink" title="五、为什么不用 MySQL Workbench？"></a>五、为什么不用 MySQL Workbench？</h2><table>
+<thead>
+<tr>
+<th align="left">对比维度</th>
+<th align="left">MySQL Workbench</th>
+<th align="left">DataGrip</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">支持的数据库</td>
+<td align="left">仅 MySQL</td>
+<td align="left">MySQL、PostgreSQL、Oracle、SQL Server 等几乎所有数据库</td>
+</tr>
+<tr>
+<td align="left">智能提示</td>
+<td align="left">基础</td>
+<td align="left">⭐⭐⭐⭐⭐ 极强，上下文感知</td>
+</tr>
+<tr>
+<td align="left">多版本管理</td>
+<td align="left">一般</td>
+<td align="left">完美支持，可以同时连接 5.7 和 8.0</td>
+</tr>
+<tr>
+<td align="left">界面体验</td>
+<td align="left">传统，部分用户觉得不直观</td>
+<td align="left">现代化，和 IntelliJ IDEA 风格一致</td>
+</tr>
+<tr>
+<td align="left">价格</td>
+<td align="left">免费</td>
+<td align="left">付费（可试用 30 天）</td>
+</tr>
+</tbody></table>
+<h3 id="5-1-下载-DataGrip"><a href="#5-1-下载-DataGrip" class="headerlink" title="5.1 下载 DataGrip"></a>5.1 下载 DataGrip</h3><ol>
+<li>访问 <a target="_blank" rel="noopener" href="https://www.jetbrains.com/datagrip/download/">JetBrains 官网</a></li>
+<li>下载对应系统的版本（有 30 天试用期，学生可免费申请教育版）</li>
+<li>安装后打开，界面和 IntelliJ IDEA、PyCharm 风格一致，上手很快</li>
+</ol>
+<h3 id="5-2-配置-DataGrip-连接两个-MySQL-版本"><a href="#5-2-配置-DataGrip-连接两个-MySQL-版本" class="headerlink" title="5.2 配置 DataGrip 连接两个 MySQL 版本"></a>5.2 配置 DataGrip 连接两个 MySQL 版本</h3><ol>
+<li>打开 DataGrip，点击 <code>+</code> → <code>Data Source</code> → <code>MySQL</code></li>
+<li><strong>连接 MySQL 5.7</strong>（需要先启动 MySQL57 服务）：<ul>
+<li>Host：<code>localhost</code></li>
+<li>Port：<code>3306</code>（5.7 默认端口）</li>
+<li>User：<code>root</code></li>
+<li>Password：你设的 5.7 密码</li>
+<li>点击「Test Connection」测试连接</li>
+</ul>
+</li>
+<li><strong>连接 MySQL 8.0</strong>（需要先启动 MySQL80 服务）：<ul>
+<li>再点一次 <code>+</code> → <code>Data Source</code> → <code>MySQL</code></li>
+<li>端口同样是 <code>3306</code>（因为不同时启动，所以不会冲突）</li>
+<li>输入 8.0 的密码</li>
+</ul>
+</li>
+<li>DataGrip 会记住这两个连接，你可以根据需要切换</li>
+<li>还可以给不同环境设置不同颜色（比如测试库绿色、生产库红色），防止误操作</li>
+</ol>
+<hr>
+<h2 id="六、如何使用这两个版本？"><a href="#六、如何使用这两个版本？" class="headerlink" title="六、如何使用这两个版本？"></a>六、如何使用这两个版本？</h2><h3 id="6-1-核心原则：不同时启动"><a href="#6-1-核心原则：不同时启动" class="headerlink" title="6.1 核心原则：不同时启动"></a>6.1 核心原则：不同时启动</h3><p>两个版本都用默认端口 3306，所以<strong>不能同时运行</strong>。平时使用遵循这个原则：</p>
+<ol>
+<li><p><strong>查看当前运行的服务</strong>：</p>
+<ul>
+<li>打开任务管理器 → 「服务」标签页</li>
+<li>或者用管理员身份运行命令提示符：<code>sc query | findstr MySQL</code></li>
+</ul>
+</li>
+<li><p><strong>启动需要的版本</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 启动 MySQL 5.7</span><br><span class="line">net start MySQL57</span><br><span class="line"></span><br><span class="line"># 启动 MySQL 8.0</span><br><span class="line">net start MySQL80</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p><strong>停止当前版本，再启动另一个</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 停止当前服务</span><br><span class="line">net stop MySQL57</span><br><span class="line"></span><br><span class="line"># 启动另一个服务</span><br><span class="line">net start MySQL80</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="6-2-设置服务为手动启动（推荐）"><a href="#6-2-设置服务为手动启动（推荐）" class="headerlink" title="6.2 设置服务为手动启动（推荐）"></a>6.2 设置服务为手动启动（推荐）</h3><p>为了避免两个服务开机自启导致冲突，建议将两个服务都设为「手动」：</p>
+<ol>
+<li>按 <code>Win + R</code>，输入 <code>services.msc</code></li>
+<li>找到 <code>MySQL57</code> 和 <code>MySQL80</code></li>
+<li>右键 → 「属性」 → 「启动类型」选择「手动」</li>
+<li>点击「确定」</li>
+</ol>
+<p>这样电脑开机时不会自动启动 MySQL，需要用哪个再手动启动。</p>
+<hr>
+<h2 id="七、验证安装"><a href="#七、验证安装" class="headerlink" title="七、验证安装"></a>七、验证安装</h2><h3 id="7-1-命令行测试连接"><a href="#7-1-命令行测试连接" class="headerlink" title="7.1 命令行测试连接"></a>7.1 命令行测试连接</h3><p><strong>连接 MySQL 5.7</strong>（先确保 MySQL57 服务已启动）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>连接 MySQL 8.0</strong>（先停止 5.7，启动 8.0）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>注意</strong>：因为端口都是 3306，所以连接命令完全一样，不需要加 <code>-P</code> 参数。关键是确保<strong>只有你要连的那个服务在运行</strong>。</p>
+<h3 id="7-2-DataGrip-中切换连接"><a href="#7-2-DataGrip-中切换连接" class="headerlink" title="7.2 DataGrip 中切换连接"></a>7.2 DataGrip 中切换连接</h3><p>在 DataGrip 左侧数据库浏览器中，你可以：</p>
+<ul>
+<li>同时看到两个连接（即使服务没启动，连接配置也在）</li>
+<li>双击某个连接，如果对应服务没运行，会提示连接失败</li>
+<li>启动对应服务后，重新连接即可</li>
+</ul>
+<hr>
+<h2 id="八、常见问题解决"><a href="#八、常见问题解决" class="headerlink" title="八、常见问题解决"></a>八、常见问题解决</h2><h3 id="8-1-安装窗口缩得很小看不见"><a href="#8-1-安装窗口缩得很小看不见" class="headerlink" title="8.1 安装窗口缩得很小看不见"></a>8.1 安装窗口缩得很小看不见</h3><p><strong>原因</strong>：不小心点了鼠标右键<br><strong>解决方法</strong>：</p>
+<ul>
+<li>在任务栏找到 MySQL Installer 图标</li>
+<li>右键点击，选择「最大化」</li>
+<li>或者按 <code>Alt + 空格键 + X</code></li>
+</ul>
+<h3 id="8-2-两个服务同时启动了怎么办？"><a href="#8-2-两个服务同时启动了怎么办？" class="headerlink" title="8.2 两个服务同时启动了怎么办？"></a>8.2 两个服务同时启动了怎么办？</h3><p>如果不小心把两个 MySQL 服务都启动了，后启动的那个会报错「端口已被占用」。</p>
+<p><strong>解决方法</strong>：</p>
+<ol>
+<li>打开任务管理器 → 「服务」标签页</li>
+<li>找到其中一个 MySQL 服务，右键点击「停止」</li>
+<li>只保留你想用的那个版本</li>
+</ol>
+<h3 id="8-3-客户端连接-8-0-报错-“Authentication-plugin-‘caching-sha2-password’”"><a href="#8-3-客户端连接-8-0-报错-“Authentication-plugin-‘caching-sha2-password’”" class="headerlink" title="8.3 客户端连接 8.0 报错 “Authentication plugin ‘caching_sha2_password’”"></a>8.3 客户端连接 8.0 报错 “Authentication plugin ‘caching_sha2_password’”</h3><p><strong>原因</strong>：安装时选了强加密认证，但客户端不支持<br><strong>解决方法</strong>：</p>
+<ul>
+<li><p>如果还没装完：退回上一步，选 Legacy 认证</p>
+</li>
+<li><p>如果已经装完：修改用户认证方式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER USER &#x27;root&#x27;@&#x27;localhost&#x27; IDENTIFIED WITH mysql_native_password BY &#x27;你的密码&#x27;;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="8-4-忘记了-root-密码怎么办？"><a href="#8-4-忘记了-root-密码怎么办？" class="headerlink" title="8.4 忘记了 root 密码怎么办？"></a>8.4 忘记了 root 密码怎么办？</h3><p>如果不小心忘了密码，可以用这个步骤重置：</p>
+<ol>
+<li>停止 MySQL 服务</li>
+<li>用 <code>--skip-grant-tables</code> 模式启动</li>
+<li>修改密码</li>
+</ol>
+<p>具体操作网上有很多教程，建议把密码记在安全的地方。</p>
+<hr>
+<h2 id="九、总结"><a href="#九、总结" class="headerlink" title="九、总结"></a>九、总结</h2><p>用 MySQL Installer 安装多版本，关键点就这几个：</p>
+<ol>
+<li><strong>下载 MySQL Installer</strong>，用 Custom 模式</li>
+<li><strong>只装 Server，不装 Workbench</strong>（后面用 DataGrip）</li>
+<li><strong>端口完全不用改</strong>，保持默认 3306</li>
+<li><strong>不同时启动两个服务</strong>，用哪个启哪个</li>
+<li><strong>认证方式选 Legacy</strong>，避免连接问题</li>
+<li><strong>千万别点右键</strong>，不然窗口会缩得看不见</li>
+<li><strong>用 DataGrip</strong> 替代 Workbench，体验更好</li>
+</ol>
+<p>这套方案的好处是：</p>
+<ul>
+<li>✅ 安装简单，不用手动配置端口</li>
+<li>✅ 使用灵活，想用哪个版本就启动哪个</li>
+<li>✅ 管理方便，DataGrip 统一管理两个连接</li>
+<li>✅ 学习成本低，不用记两个端口号</li>
+</ul>
+<p>希望这篇指南能帮你顺利装上 MySQL。如果安装过程中遇到其他问题，欢迎留言交流～</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/MySQL/" rel="tag"># MySQL</a>
+              <a href="/tags/%E7%89%88%E6%9C%AC%E5%85%B1%E5%AD%98/" rel="tag"># 版本共存</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/03/03/GitHub%20%E5%9B%A2%E9%98%9F%E5%8D%8F%E4%BD%9C%E6%8C%87%E5%8D%97%EF%BC%9A%E4%BB%8E%E5%88%86%E6%94%AF%E7%AE%A1%E7%90%86%E5%88%B0%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6/" rel="prev" title="GitHub 团队协作指南：从分支管理到权限控制">
+                  <i class="fa fa-angle-left"></i> GitHub 团队协作指南：从分支管理到权限控制
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">6017</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
