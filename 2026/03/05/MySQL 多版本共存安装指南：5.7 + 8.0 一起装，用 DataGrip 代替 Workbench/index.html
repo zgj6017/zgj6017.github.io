@@ -29,12 +29,17 @@
 <meta property="og:site_name" content="6017">
 <meta property="og:description" content="最近想在同一台电脑上同时使用 MySQL 5.7 和 8.0，本以为是个折腾的过程，没想到用 MySQL Installer 居然这么简单——完全不用手动改端口，只要不同时启动两个服务就行。 这篇文章就把我的安装经验分享出来，特别是那些容易踩的坑：安装窗口突然缩得看不见、认证方式选错连不上……希望能帮到同样在安装 MySQL 的朋友。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zgj6017.github.io/2026/03/05/MySQL%20%E5%A4%9A%E7%89%88%E6%9C%AC%E5%85%B1%E5%AD%98%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97%EF%BC%9A5.7%20+%208.0%20%E4%B8%80%E8%B5%B7%E8%A3%85%EF%BC%8C%E7%94%A8%20DataGrip%20%E4%BB%A3%E6%9B%BF%20Workbench/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202026-03-05%20145317.png">
+<meta property="og:image" content="https://zgj6017.github.io/2026/03/05/MySQL%20%E5%A4%9A%E7%89%88%E6%9C%AC%E5%85%B1%E5%AD%98%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97%EF%BC%9A5.7%20+%208.0%20%E4%B8%80%E8%B5%B7%E8%A3%85%EF%BC%8C%E7%94%A8%20DataGrip%20%E4%BB%A3%E6%9B%BF%20Workbench/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202026-03-05%20150613.png">
+<meta property="og:image" content="https://zgj6017.github.io/2026/03/05/MySQL%20%E5%A4%9A%E7%89%88%E6%9C%AC%E5%85%B1%E5%AD%98%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97%EF%BC%9A5.7%20+%208.0%20%E4%B8%80%E8%B5%B7%E8%A3%85%EF%BC%8C%E7%94%A8%20DataGrip%20%E4%BB%A3%E6%9B%BF%20Workbench/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202026-03-05%20153807.png">
+<meta property="og:image" content="https://zgj6017.github.io/2026/03/05/MySQL%20%E5%A4%9A%E7%89%88%E6%9C%AC%E5%85%B1%E5%AD%98%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97%EF%BC%9A5.7%20+%208.0%20%E4%B8%80%E8%B5%B7%E8%A3%85%EF%BC%8C%E7%94%A8%20DataGrip%20%E4%BB%A3%E6%9B%BF%20Workbench/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202026-03-05%20153919.png">
 <meta property="article:published_time" content="2026-03-05T08:00:00.000Z">
 <meta property="article:modified_time" content="2026-03-05T08:00:00.000Z">
 <meta property="article:author" content="6017">
 <meta property="article:tag" content="MySQL">
 <meta property="article:tag" content="版本共存">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zgj6017.github.io/2026/03/05/MySQL%20%E5%A4%9A%E7%89%88%E6%9C%AC%E5%85%B1%E5%AD%98%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97%EF%BC%9A5.7%20+%208.0%20%E4%B8%80%E8%B5%B7%E8%A3%85%EF%BC%8C%E7%94%A8%20DataGrip%20%E4%BB%A3%E6%9B%BF%20Workbench/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202026-03-05%20145317.png">
 
 
 <link rel="canonical" href="https://zgj6017.github.io/2026/03/05/MySQL%20%E5%A4%9A%E7%89%88%E6%9C%AC%E5%85%B1%E5%AD%98%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97%EF%BC%9A5.7%20+%208.0%20%E4%B8%80%E8%B5%B7%E8%A3%85%EF%BC%8C%E7%94%A8%20DataGrip%20%E4%BB%A3%E6%9B%BF%20Workbench/">
@@ -289,7 +294,7 @@
 <p><strong>⚠️ 注意：不要添加 MySQL Workbench！</strong> 我们后面会用 DataGrip 代替，体验更好。</p>
 <p>页面底部有个「Enable the Select Features page」的勾选框，<strong>保持不勾选</strong>，否则后面会多出很多复杂配置。</p>
 <h3 id="3-4-路径冲突的处理"><a href="#3-4-路径冲突的处理" class="headerlink" title="3.4 路径冲突的处理"></a>3.4 路径冲突的处理</h3><p>如果你之前装过 MySQL 5.7，可能会遇到路径冲突的提示：</p>
-
+<img src="/2026/03/05/MySQL%20%E5%A4%9A%E7%89%88%E6%9C%AC%E5%85%B1%E5%AD%98%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97%EF%BC%9A5.7%20+%208.0%20%E4%B8%80%E8%B5%B7%E8%A3%85%EF%BC%8C%E7%94%A8%20DataGrip%20%E4%BB%A3%E6%9B%BF%20Workbench/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202026-03-05%20145317.png" class="" title="这是一个图片说明">
 
 <p>这是因为默认路径（<code>C:\Program Files\MySQL\MySQL Server 8.0</code>）可能已被占用。</p>
 <p><strong>处理方法</strong>：</p>
@@ -303,7 +308,7 @@
 </ul>
 <h3 id="3-5-开始安装"><a href="#3-5-开始安装" class="headerlink" title="3.5 开始安装"></a>3.5 开始安装</h3><p>点击 <strong>Execute</strong>，等待安装完成。这个过程大概 1-5 分钟，取决于电脑性能。</p>
 <hr>
-<h2 id="四、配置-MySQL-8-0"><a href="#四、配置-MySQL-8-0" class="headerlink" title="四、配置 MySQL 8.0"></a>四、配置 MySQL 8.0</h2><h3 id="4-1-网络配置（这一步什么都不用改！）"><a href="#4-1-网络配置（这一步什么都不用改！）" class="headerlink" title="4.1 网络配置（这一步什么都不用改！）"></a>4.1 网络配置（这一步什么都不用改！）</h3>
+<h2 id="四、配置-MySQL-8-0"><a href="#四、配置-MySQL-8-0" class="headerlink" title="四、配置 MySQL 8.0"></a>四、配置 MySQL 8.0</h2><h3 id="4-1-网络配置（这一步什么都不用改！）"><a href="#4-1-网络配置（这一步什么都不用改！）" class="headerlink" title="4.1 网络配置（这一步什么都不用改！）"></a>4.1 网络配置（这一步什么都不用改！）</h3><img src="/2026/03/05/MySQL%20%E5%A4%9A%E7%89%88%E6%9C%AC%E5%85%B1%E5%AD%98%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97%EF%BC%9A5.7%20+%208.0%20%E4%B8%80%E8%B5%B7%E8%A3%85%EF%BC%8C%E7%94%A8%20DataGrip%20%E4%BB%A3%E6%9B%BF%20Workbench/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202026-03-05%20150613.png" class="" title="这是一个图片说明">
 
 <p><strong>关键提示</strong>：这里<strong>完全不用改端口</strong>，保持默认的 3306 就行。</p>
 <p>为什么不用改？</p>
@@ -346,7 +351,7 @@
 <td align="left">保持默认</td>
 </tr>
 </tbody></table>
-<h3 id="4-2-认证方式选择（最容易踩坑的地方！）"><a href="#4-2-认证方式选择（最容易踩坑的地方！）" class="headerlink" title="4.2 认证方式选择（最容易踩坑的地方！）"></a>4.2 认证方式选择（最容易踩坑的地方！）</h3>
+<h3 id="4-2-认证方式选择（最容易踩坑的地方！）"><a href="#4-2-认证方式选择（最容易踩坑的地方！）" class="headerlink" title="4.2 认证方式选择（最容易踩坑的地方！）"></a>4.2 认证方式选择（最容易踩坑的地方！）</h3><img src="/2026/03/05/MySQL%20%E5%A4%9A%E7%89%88%E6%9C%AC%E5%85%B1%E5%AD%98%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97%EF%BC%9A5.7%20+%208.0%20%E4%B8%80%E8%B5%B7%E8%A3%85%EF%BC%8C%E7%94%A8%20DataGrip%20%E4%BB%A3%E6%9B%BF%20Workbench/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202026-03-05%20153807.png" class="" title="这是一个图片说明">
 
 <p><strong>一定要选下面那个！</strong></p>
 <ul>
@@ -359,7 +364,7 @@
 <li>选了 Strong，可能导致 DataGrip 或其他客户端连不上</li>
 <li>选了 Legacy，所有工具开箱即用，不用折腾配置</li>
 </ol>
-<h3 id="4-3-设置-root-密码"><a href="#4-3-设置-root-密码" class="headerlink" title="4.3 设置 root 密码"></a>4.3 设置 root 密码</h3>
+<h3 id="4-3-设置-root-密码"><a href="#4-3-设置-root-密码" class="headerlink" title="4.3 设置 root 密码"></a>4.3 设置 root 密码</h3><img src="/2026/03/05/MySQL%20%E5%A4%9A%E7%89%88%E6%9C%AC%E5%85%B1%E5%AD%98%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97%EF%BC%9A5.7%20+%208.0%20%E4%B8%80%E8%B5%B7%E8%A3%85%EF%BC%8C%E7%94%A8%20DataGrip%20%E4%BB%A3%E6%9B%BF%20Workbench/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202026-03-05%20153919.png" class="" title="这是一个图片说明">
 
 <p>输入你想要设置的密码，点击 <strong>Check</strong> 检查强度。密码要求：</p>
 <ul>
