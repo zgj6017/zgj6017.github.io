@@ -144,7 +144,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-count">21</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -153,7 +153,7 @@
         <span class="site-state-item-name">分类</span>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-count">42</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -179,6 +179,311 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://zgj6017.github.io/2026/10/11/%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E9%83%A8%E7%BD%B2%20Claude%20Code%20+%20DeepSeek%20+%20LiteLLM%EF%BC%9AWindows%2011%20%E5%AE%9E%E6%88%98%E6%95%99%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://github.com/zgj6017.png">
+      <meta itemprop="name" content="6017">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="6017">
+      <meta itemprop="description" content="在白云看了《硅谷之火》这本书后，想成为雷布斯的小佬">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 6017">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/10/11/%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E9%83%A8%E7%BD%B2%20Claude%20Code%20+%20DeepSeek%20+%20LiteLLM%EF%BC%9AWindows%2011%20%E5%AE%9E%E6%88%98%E6%95%99%E7%A8%8B/" class="post-title-link" itemprop="url">手把手教你部署 Claude Code + DeepSeek + LiteLLM：Windows 11 实战教程</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-10-11 11:30:00" itemprop="dateCreated datePublished" datetime="2026-10-11T11:30:00+08:00">2026-10-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%BB%8F%E9%AA%8C/" itemprop="url" rel="index"><span itemprop="name">学习经验</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="一、项目介绍"><a href="#一、项目介绍" class="headerlink" title="一、项目介绍"></a>一、项目介绍</h2><p>Claude Code 是一款面向编程任务的 AI 工具，可以帮助开发者阅读代码、修改项目和执行开发任务。</p>
+<p>DeepSeek 提供了可通过 API 调用的模型。通过配置兼容接口，可以尝试让 Claude Code 使用 DeepSeek，而不一定要直接使用 Anthropic 的模型服务。</p>
+<p>不过，如果以后还想在 DeepSeek、Claude、OpenAI 等不同模型之间切换，每次修改客户端配置就不够方便了。</p>
+<p>因此，本教程准备搭建以下架构：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Claude Code</span><br><span class="line">    |</span><br><span class="line">    v</span><br><span class="line">LiteLLM 本地模型网关</span><br><span class="line">    |</span><br><span class="line">    +---- DeepSeek API</span><br><span class="line">    +---- Anthropic API（可扩展）</span><br><span class="line">    +---- OpenAI API（可扩展）</span><br><span class="line">    +---- 其他支持的模型服务（可扩展）</span><br></pre></td></tr></table></figure>
+
+<p>LiteLLM 负责统一接收请求，并将请求转发给对应的模型提供商。需要注意：如果后端使用云端 API，模型推理仍然在云端进行，本地运行的是网关服务。</p>
+<p><strong>本文目标：</strong></p>
+<ol>
+<li>安装 Claude Code。</li>
+<li>验证 Claude Code 可以直接调用 DeepSeek。</li>
+<li>准备 LiteLLM 网关配置。</li>
+<li>使用 Docker 运行 LiteLLM。</li>
+<li>让 Claude Code 通过本地网关调用模型。</li>
+<li>为后续扩展其他模型提供商做好准备。</li>
+</ol>
+<blockquote>
+<p>说明：本文的前两步已经在实际环境中验证。由于当前 Windows 11 的虚拟机平台功能尚未成功启用，Docker 和 LiteLLM 的最终启动及端到端调用仍需完成验证。</p>
+</blockquote>
+<h2 id="二、准备部署环境"><a href="#二、准备部署环境" class="headerlink" title="二、准备部署环境"></a>二、准备部署环境</h2><p>本次实际使用的环境如下：</p>
+<table>
+<thead>
+<tr>
+<th>软件或配置</th>
+<th>实际版本或路径</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>操作系统</td>
+<td>Windows 11 专业版 25H2</td>
+</tr>
+<tr>
+<td>Windows OS Build</td>
+<td>26200.9457</td>
+</tr>
+<tr>
+<td>Node.js</td>
+<td>v22.22.1</td>
+</tr>
+<tr>
+<td>npm</td>
+<td>10.9.4</td>
+</tr>
+<tr>
+<td>Claude Code</td>
+<td>2.1.283</td>
+</tr>
+<tr>
+<td>Docker CLI</td>
+<td>27.5.1</td>
+</tr>
+<tr>
+<td>LiteLLM 工作目录</td>
+<td><code>D:\AI\litellm</code></td>
+</tr>
+</tbody></table>
+<p>建议先安装 Node.js，并确认命令行可以正常使用。</p>
+<p>打开 CMD，执行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
+
+<p>如果能够显示版本号，说明 Node.js 和 npm 已经可以使用。</p>
+<h2 id="三、安装-Claude-Code"><a href="#三、安装-Claude-Code" class="headerlink" title="三、安装 Claude Code"></a>三、安装 Claude Code</h2><p>在 CMD 中执行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g @anthropic-ai/claude-code</span><br></pre></td></tr></table></figure>
+
+<p>安装完成后，检查版本：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">claude --version</span><br></pre></td></tr></table></figure>
+
+<p>本次得到的版本是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2.1.283 (Claude Code)</span><br></pre></td></tr></table></figure>
+
+<p>如果提示找不到 <code>claude</code> 命令，可以先检查 npm 全局安装目录是否在系统 PATH 中，再重新打开终端验证。</p>
+<h2 id="四、先让-Claude-Code-连接-DeepSeek"><a href="#四、先让-Claude-Code-连接-DeepSeek" class="headerlink" title="四、先让 Claude Code 连接 DeepSeek"></a>四、先让 Claude Code 连接 DeepSeek</h2><p>在部署统一网关之前，建议先单独验证 Claude Code 和 DeepSeek 的连接。这样可以将客户端配置问题与 Docker、LiteLLM 的问题分开排查。</p>
+<h3 id="1-准备-DeepSeek-API-Key"><a href="#1-准备-DeepSeek-API-Key" class="headerlink" title="1. 准备 DeepSeek API Key"></a>1. 准备 DeepSeek API Key</h3><p>先在 DeepSeek 官方平台创建并获取 API Key。</p>
+<p>API Key 相当于调用接口的凭证，不要公开分享，也不要提交到公开代码仓库。</p>
+<h3 id="2-配置环境变量"><a href="#2-配置环境变量" class="headerlink" title="2. 配置环境变量"></a>2. 配置环境变量</h3><p>本次使用的是 CMD，因此采用以下语法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">set ANTHROPIC_BASE_URL=https://api.deepseek.com/anthropic</span><br><span class="line">set ANTHROPIC_AUTH_TOKEN=替换为你自己的DeepSeek_API_Key</span><br><span class="line">set ANTHROPIC_MODEL=deepseek-flash[1m]</span><br><span class="line">set ANTHROPIC_DEFAULT_OPUS_MODEL=deepseek-flash[1m]</span><br><span class="line">set ANTHROPIC_DEFAULT_SONNET_MODEL=deepseek-flash[1m]</span><br><span class="line">set ANTHROPIC_DEFAULT_HAIKU_MODEL=deepseek-flash</span><br><span class="line">set CLAUDE_CODE_SUBAGENT_MODEL=deepseek-flash</span><br></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<ul>
+<li>上述命令适用于 CMD，不要直接复制到 PowerShell 中使用。</li>
+<li>这些 <code>set</code> 命令设置的变量通常只在当前 CMD 会话中有效。</li>
+<li>模型名称应以当前服务端实际支持的模型为准。如果出现模型目录不识别的错误，应先核对模型 ID 和 Claude Code 的兼容性。</li>
+</ul>
+<p>如果使用 PowerShell，设置环境变量的语法不同，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$env:ANTHROPIC_BASE_URL = &quot;https://api.deepseek.com/anthropic&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-启动并验证"><a href="#3-启动并验证" class="headerlink" title="3. 启动并验证"></a>3. 启动并验证</h3><p>进入自己的项目目录：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /d D:\Homework\BookManage</span><br></pre></td></tr></table></figure>
+
+<p>启动：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">claude</span><br></pre></td></tr></table></figure>
+
+<p>本次测试中，Claude Code 显示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Claude Code v2.1.283</span><br><span class="line">deepseek-flash[1m] · API Usage Billing</span><br></pre></td></tr></table></figure>
+
+<p>随后可以输入一个简单的问题，验证是否能够正常得到模型回复。</p>
+<p>至此，已经验证 Claude Code 可以直接连接 DeepSeek。</p>
+<p>不过，这种方式仍然是客户端直接请求 DeepSeek API，还没有经过 LiteLLM。</p>
+<h2 id="五、准备-LiteLLM-配置文件"><a href="#五、准备-LiteLLM-配置文件" class="headerlink" title="五、准备 LiteLLM 配置文件"></a>五、准备 LiteLLM 配置文件</h2><p>接下来准备统一模型网关。</p>
+<h3 id="1-创建工作目录"><a href="#1-创建工作目录" class="headerlink" title="1. 创建工作目录"></a>1. 创建工作目录</h3><p>在 CMD 中执行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir D:\AI\litellm</span><br></pre></td></tr></table></figure>
+
+<p>在该目录下创建 <code>config.yaml</code>。</p>
+<p>目录结构如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">D:\AI\litellm</span><br><span class="line">└── config.yaml</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-编写-config-yaml"><a href="#2-编写-config-yaml" class="headerlink" title="2. 编写 config.yaml"></a>2. 编写 config.yaml</h3><p>先使用最简单的 DeepSeek 配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">model_list:</span><br><span class="line">  - model_name: deepseek</span><br><span class="line">    litellm_params:</span><br><span class="line">      model: deepseek/deepseek-chat</span><br><span class="line">      api_key: os.environ/DEEPSEEK_API_KEY</span><br><span class="line"></span><br><span class="line">general_settings:</span><br><span class="line">  master_key: sk-litellm-local</span><br></pre></td></tr></table></figure>
+
+<p>配置说明：</p>
+<ul>
+<li><code>model_name</code>：客户端使用的模型别名。</li>
+<li><code>model</code>：LiteLLM 使用的上游模型标识。</li>
+<li><code>api_key</code>：从环境变量读取 DeepSeek API Key。</li>
+<li><code>master_key</code>：网关自身的访问密钥。</li>
+</ul>
+<p>这里的 <code>sk-litellm-local</code> 仅作为示例值。实际部署时，应替换成自己管理的密钥，并避免将其公开。</p>
+<p>如果修改了模型别名，后续 Claude Code 请求时也必须使用相同的名称。</p>
+<h2 id="六、安装并启动-Docker-Desktop"><a href="#六、安装并启动-Docker-Desktop" class="headerlink" title="六、安装并启动 Docker Desktop"></a>六、安装并启动 Docker Desktop</h2><p>本次使用 Docker 来运行 LiteLLM。</p>
+<p>安装 Docker Desktop 后，先执行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker --version</span><br></pre></td></tr></table></figure>
+
+<p>本次输出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Docker version 27.5.1, build 9f9e405</span><br></pre></td></tr></table></figure>
+
+<p>但需要特别注意：<strong>看到 Docker 版本号，只能证明 Docker CLI 已安装，并不能证明 Docker Engine 已经运行。</strong></p>
+<p>进一步检查：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker version</span><br></pre></td></tr></table></figure>
+
+<p>正常情况下，输出中应该同时包含 Client 和 Server 信息。</p>
+<p>如果 Server 部分报错，需要先解决 Docker Desktop 后端启动问题，再继续部署 LiteLLM。</p>
+<h2 id="七、通过-Docker-启动-LiteLLM"><a href="#七、通过-Docker-启动-LiteLLM" class="headerlink" title="七、通过 Docker 启动 LiteLLM"></a>七、通过 Docker 启动 LiteLLM</h2><p>确认 Docker Engine 正常运行后，在 CMD 中设置当前会话使用的 DeepSeek API Key：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set DEEPSEEK_API_KEY=替换为你自己的DeepSeek_API_Key</span><br></pre></td></tr></table></figure>
+
+<p>然后启动容器：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker run --rm -p 4000:4000 ^</span><br><span class="line">  -v D:\AI\litellm\config.yaml:/app/config.yaml ^</span><br><span class="line">  -e DEEPSEEK_API_KEY=%DEEPSEEK_API_KEY% ^</span><br><span class="line">  ghcr.io/berriai/litellm:main-latest ^</span><br><span class="line">  --config /app/config.yaml</span><br></pre></td></tr></table></figure>
+
+<p>这条命令的作用：</p>
+<ul>
+<li><code>-p 4000:4000</code>：将本机 4000 端口映射到容器 4000 端口。</li>
+<li><code>-v</code>：将本机的配置文件挂载到容器。</li>
+<li><code>-e</code>：把 DeepSeek API Key 传入容器环境。</li>
+<li><code>--config</code>：指定 LiteLLM 使用的配置文件。</li>
+</ul>
+<p>本次部署实际执行到这一步时，Docker 返回了以下错误：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker: error during connect:</span><br><span class="line">open //./pipe/docker_engine:</span><br><span class="line">The system cannot find the file specified.</span><br></pre></td></tr></table></figure>
+
+<p>这表明 Docker CLI 无法连接 Docker Engine，因此 LiteLLM 容器并未成功启动。</p>
+<h2 id="八、Windows-11-的虚拟机平台问题"><a href="#八、Windows-11-的虚拟机平台问题" class="headerlink" title="八、Windows 11 的虚拟机平台问题"></a>八、Windows 11 的虚拟机平台问题</h2><p>Docker Desktop 提示系统未启用 Virtual Machine Platform（虚拟机平台）。</p>
+<p>在管理员 PowerShell 中检查：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform</span><br></pre></td></tr></table></figure>
+
+<p>本次结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FeatureName : VirtualMachinePlatform</span><br><span class="line">State       : Disabled</span><br></pre></td></tr></table></figure>
+
+<p>尝试启用：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform</span><br></pre></td></tr></table></figure>
+
+<p>也尝试过：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DISM /Online /Enable-Feature /FeatureName:VirtualMachinePlatform /All</span><br></pre></td></tr></table></figure>
+
+<p>但启用过程长时间停滞，最终功能仍然处于 Disabled 状态。</p>
+<p>如果遇到类似情况，不要立刻反复重装 Docker。先确认 Windows 功能是否真正启用，以及系统组件是否能够正常修复。</p>
+<h2 id="九、DISM-修复失败：0x800f0915"><a href="#九、DISM-修复失败：0x800f0915" class="headerlink" title="九、DISM 修复失败：0x800f0915"></a>九、DISM 修复失败：0x800f0915</h2><p>检查组件存储：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DISM /Online /Cleanup-Image /CheckHealth</span><br></pre></td></tr></table></figure>
+
+<p>系统提示组件存储可以修复。</p>
+<p>继续执行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DISM /Online /Cleanup-Image /RestoreHealth</span><br></pre></td></tr></table></figure>
+
+<p>结果返回：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">错误: 0x800f0915</span><br><span class="line">在任何位置都找不到修复内容。</span><br></pre></td></tr></table></figure>
+
+<p>这说明 DISM 没有找到当前修复操作需要的内容。此时应检查修复源和系统组件状态，而不是无限重复运行相同命令。</p>
+<h3 id="1-尝试本机组件目录"><a href="#1-尝试本机组件目录" class="headerlink" title="1. 尝试本机组件目录"></a>1. 尝试本机组件目录</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DISM /Online /Cleanup-Image /RestoreHealth /Source:C:\Windows\WinSxS /LimitAccess</span><br></pre></td></tr></table></figure>
+
+<p>结果仍然失败。</p>
+<h3 id="2-尝试-Windows-安装映像"><a href="#2-尝试-Windows-安装映像" class="headerlink" title="2. 尝试 Windows 安装映像"></a>2. 尝试 Windows 安装映像</h3><p>本次使用的安装映像位于：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">E:\sources\install.wim</span><br></pre></td></tr></table></figure>
+
+<p>其中索引 4 对应 Windows 11 专业版，映像构建版本为 26200.8037。</p>
+<p>当前系统的构建版本为 26200.9457。</p>
+<p>尝试指定映像：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DISM /Online /Cleanup-Image /RestoreHealth /Source:wim:E:\sources\install.wim:4 /LimitAccess</span><br></pre></td></tr></table></figure>
+
+<p>仍然返回 <code>0x800f0915</code>。</p>
+<p>这里有一个重要经验：修复源需要能够提供当前系统所需的组件。版本较旧的安装映像可能缺少当前系统需要的内容；某些可选功能也可能需要额外的 Features on Demand（按需功能）源。因此，不能假设任意一份同为 Windows 11 25H2 的安装映像都能完成修复。</p>
+<h3 id="3-尝试-Windows-设置中的修复安装"><a href="#3-尝试-Windows-设置中的修复安装" class="headerlink" title="3. 尝试 Windows 设置中的修复安装"></a>3. 尝试 Windows 设置中的修复安装</h3><p>本次还使用了 Windows 设置中的“使用 Windows 更新修复问题”功能，完成后重启系统。</p>
+<p>但再次检查时，组件存储仍提示可以修复，<code>RestoreHealth</code> 仍然返回 <code>0x800f0915</code>。</p>
+<p>因此，这次修复没有解决当前问题。</p>
+<h2 id="十、查看-CBS-日志"><a href="#十、查看-CBS-日志" class="headerlink" title="十、查看 CBS 日志"></a>十、查看 CBS 日志</h2><p>当常规命令无法定位原因时，可以进一步查看：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\Windows\Logs\CBS\CBS.log</span><br></pre></td></tr></table></figure>
+
+<p>本次日志中出现：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FCAcquirerWUClient: WULib DownloadProgress: [50 / 100]</span><br></pre></td></tr></table></figure>
+
+<p>该记录在一段时间内多次出现，显示进度一直停留在 50 &#x2F; 100。</p>
+<p>随后还出现：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HRESULT = 0x800f0820 - CBS_E_CANCEL</span><br></pre></td></tr></table></figure>
+
+<p><code>CBS_E_CANCEL</code> 表示相关处理步骤被取消，但它本身不一定是最初的根因。结合当前情况，只能确定组件获取流程存在异常线索，尚不能仅凭这几行日志断定具体是网络、Windows Update 还是组件存储导致。</p>
+<p>可以用 PowerShell 搜索相关记录：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Select-String -Path C:\Windows\Logs\CBS\CBS.log `</span><br><span class="line">  -Pattern &quot;FCAcquirerWUClient&quot;,&quot;0x800f0915&quot;,&quot;0x800f081f&quot;,&quot;0x800f0820&quot;,&quot;VirtualMachinePlatform&quot; |</span><br><span class="line">  Select-Object -Last 100</span><br></pre></td></tr></table></figure>
+
+<p>建议查看错误发生时间点前后的日志上下文，重点寻找具体组件名称、包标识和源缺失信息。</p>
+<h2 id="十一、部署完成后应该如何验证？"><a href="#十一、部署完成后应该如何验证？" class="headerlink" title="十一、部署完成后应该如何验证？"></a>十一、部署完成后应该如何验证？</h2><p>由于本次部署停在 Docker Engine 无法启动的阶段，下面这些属于后续验证步骤，尚未在本次环境中完成。</p>
+<h3 id="1-验证虚拟机平台"><a href="#1-验证虚拟机平台" class="headerlink" title="1. 验证虚拟机平台"></a>1. 验证虚拟机平台</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform</span><br></pre></td></tr></table></figure>
+
+<p>确认功能已启用，并按系统提示完成必要的重启。</p>
+<h3 id="2-验证-Docker-Engine"><a href="#2-验证-Docker-Engine" class="headerlink" title="2. 验证 Docker Engine"></a>2. 验证 Docker Engine</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker version</span><br></pre></td></tr></table></figure>
+
+<p>确认 Client 和 Server 均能正常返回信息。</p>
+<h3 id="3-启动-LiteLLM"><a href="#3-启动-LiteLLM" class="headerlink" title="3. 启动 LiteLLM"></a>3. 启动 LiteLLM</h3><p>重新执行前面的 <code>docker run</code> 命令，观察容器日志，确认服务正常启动。</p>
+<h3 id="4-验证网关-API"><a href="#4-验证网关-API" class="headerlink" title="4. 验证网关 API"></a>4. 验证网关 API</h3><p>当 LiteLLM 成功启动后，可以先通过其模型列表接口检查服务：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl http://localhost:4000/v1/models -H &quot;Authorization: Bearer sk-litellm-local&quot;</span><br></pre></td></tr></table></figure>
+
+<p>如果服务正常，应该能够得到模型列表响应。若返回认证错误，需要检查网关密钥；若连接失败，需要检查容器是否正在运行、端口映射是否正确。</p>
+<h3 id="5-配置-Claude-Code-指向本地网关"><a href="#5-配置-Claude-Code-指向本地网关" class="headerlink" title="5. 配置 Claude Code 指向本地网关"></a>5. 配置 Claude Code 指向本地网关</h3><p>只有在网关已经成功启动、模型别名已配置且 API 调用验证通过后，再将 Claude Code 的接口地址改为本地 LiteLLM 地址，并配置网关密钥与模型别名。</p>
+<p>这一步应根据当前 LiteLLM 版本的 Claude Code 接入文档完成，不能仅凭变量名称猜测兼容性。</p>
+<h2 id="十二、总结"><a href="#十二、总结" class="headerlink" title="十二、总结"></a>十二、总结</h2><p>这次实战已经验证了 Claude Code 直连 DeepSeek 的基本流程，也完成了 LiteLLM 配置文件的初步准备。</p>
+<p>但 Docker Desktop 受 Windows 11 虚拟机平台启用问题阻塞，导致 LiteLLM 尚未成功启动。因此，目前不能把整个部署描述为已经完成。</p>
+<p>本次最值得总结的经验有三点：</p>
+<ol>
+<li><strong>分层验证</strong>：先验证 Claude Code 与 DeepSeek，再验证 Docker，最后验证 LiteLLM 网关，避免混淆问题来源。</li>
+<li><strong>重视修复源匹配</strong>：DISM 报错时，应结合当前系统构建版本、映像版本和组件需求分析。</li>
+<li><strong>用日志收敛原因</strong>：进度停滞和操作取消都是线索，但必须结合上下文才能判断根因。</li>
+</ol>
+<p>后续应先解决 Windows 组件获取和 VirtualMachinePlatform 启用问题，再完成 Docker、LiteLLM 与 Claude Code 的端到端验证。届时可以继续补充实际成功的网关调用结果和多模型切换示例。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -904,89 +1209,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://zgj6017.github.io/2026/02/28/%E4%B8%8D%E8%A6%81%E7%94%A8%E7%8E%B0%E5%9C%A8%E7%9A%84%E4%BD%A0%EF%BC%8C%E5%AE%A1%E5%88%A4%E5%BD%93%E5%88%9D%E7%9A%84%E8%87%AA%E5%B7%B1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://github.com/zgj6017.png">
-      <meta itemprop="name" content="6017">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="6017">
-      <meta itemprop="description" content="在白云看了《硅谷之火》这本书后，想成为雷布斯的小佬">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 6017">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/02/28/%E4%B8%8D%E8%A6%81%E7%94%A8%E7%8E%B0%E5%9C%A8%E7%9A%84%E4%BD%A0%EF%BC%8C%E5%AE%A1%E5%88%A4%E5%BD%93%E5%88%9D%E7%9A%84%E8%87%AA%E5%B7%B1/" class="post-title-link" itemprop="url">不要用现在的你，审判当初的自己</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-02-28 15:30:00" itemprop="dateCreated datePublished" datetime="2026-02-28T15:30:00+08:00">2026-02-28</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%BF%83%E7%81%B5%E9%9A%8F%E7%AC%94/" itemprop="url" rel="index"><span itemprop="name">心灵随笔</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>你有没有问过自己：如果回到十年前，我会不会做出不一样的选择？</p>
-<p>这个问题，我常常想。想得多了，便慢慢明白一件事——我们永远无法用今天的眼睛，去评判昨天的自己。因为你今天能看清的每一座山，都是因为你已经站在了山之外。</p>
-          <!--noindex-->
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>
